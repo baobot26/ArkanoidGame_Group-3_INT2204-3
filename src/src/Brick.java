@@ -1,4 +1,4 @@
-/**
+~/**
  * Class representing a brick in the game.
  * It extends the GameObject class to inherit position and dimension properties.
  */

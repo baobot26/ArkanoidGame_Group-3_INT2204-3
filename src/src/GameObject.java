@@ -6,6 +6,7 @@ public abstract class GameObject {
     double y;
     double width;
     double height;
+    double speed;
     abstract void update();
     abstract void render();
 }
