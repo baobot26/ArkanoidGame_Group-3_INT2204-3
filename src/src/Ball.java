@@ -5,7 +5,7 @@
 public class Ball extends MoveableObject{
     @Override
     void move() {
-
+    // test
     }
 
     @Override
