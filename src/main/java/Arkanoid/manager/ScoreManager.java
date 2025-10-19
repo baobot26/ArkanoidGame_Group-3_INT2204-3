@@ -7,25 +7,34 @@ public class ScoreManager {
     private int lives;
 
     public ScoreManager() {
+        reset();
     }
 
     public void addScore(int points) {
+        score += points;
     }
 
     public void loseLife() {
+        lives--;
     }
 
     public void addLife() {
+        lives++;
     }
 
     public void nextLevel() {
+        level++;
     }
 
     public void reset() {
+        highScore = Math.max(highScore,score);
+        score = 0;
+        lives = 3;
+        level = 1;
     }
 
     public boolean isGameOver() {
-        return false;
+        return lives <= 0;
     }
 
     // Getters

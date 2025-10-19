@@ -4,27 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e74defe-29f5-476c-ae78-8074b9e1cb93" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/lib/javafx.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Ball.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Brick.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/GameManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/GameObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/MoveableObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Paddle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/PowerUps.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Renderer.java" beforeDir="false" />
-    </list>
+    <list default="true" id="2e74defe-29f5-476c-ae78-8074b9e1cb93" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "sasasasaascas"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/armordkay/ArkanoidGame_Group-3_INT2204-3.git",
+    "accountId": "66e2f4b2-4666-4882-8283-2b01bd64e3a0"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -39,7 +44,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "ducdong",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/armordkay/git clone/ArkanoidGame_Group-3_INT2204-3"
   }
