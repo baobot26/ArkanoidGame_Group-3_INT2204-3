@@ -7,12 +7,19 @@ public abstract class MoveableObject extends GameObject {
 
     public MoveableObject(double x, double y, double width, double height, double speed) {
         super(x, y, width, height);
+        this.speed = speed;
+        this.velocityX = 0;
+        this.velocityY = 0;
     }
 
     public void move() {
+        x += velocityX;
+        y += velocityY;
     }
 
     public void move(double deltaTime) {
+        x += velocityX * deltaTime * 60.0; // Multiply by 60 for smooth 60fps equivalent
+        y += velocityY * deltaTime * 60.0;
     }
 
     // Getters and setters

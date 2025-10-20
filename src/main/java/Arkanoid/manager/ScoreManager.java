@@ -7,12 +7,19 @@ public class ScoreManager {
     private int lives;
 
     public ScoreManager() {
-        reset();
+        this.score = 0;
+        this.highScore = 0;
+        this.level = 1;
+        this.lives = 3;
     }
 
     public void addScore(int points) {
         score += points;
-      
+        if (score > highScore) {
+            highScore = score;
+        }
+    }
+
     public void loseLife() {
         lives--;
     }
@@ -26,10 +33,9 @@ public class ScoreManager {
     }
 
     public void reset() {
-        highScore = Math.max(highScore,score);
         score = 0;
-        lives = 3;
         level = 1;
+        lives = 3;
     }
 
     public boolean isGameOver() {
