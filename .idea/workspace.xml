@@ -4,18 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e74defe-29f5-476c-ae78-8074b9e1cb93" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/lib/javafx.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Ball.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Brick.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/GameManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/GameObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/MoveableObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Paddle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/PowerUps.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/src/Renderer.java" beforeDir="false" />
+    <list default="true" id="2e74defe-29f5-476c-ae78-8074b9e1cb93" name="Changes" comment="fix: wrong brick implement">
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArkanoidGame_Group-3_INT2204-3.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +21,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -39,11 +39,27 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/armordkay/git clone/ArkanoidGame_Group-3_INT2204-3"
+    "last_opened_file_path": "/home/armordkay/git clone/ArkanoidGame_Group-3_INT2204-3",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="2e74defe-29f5-476c-ae78-8074b9e1cb93" name="Changes" comment="" />
@@ -51,7 +67,72 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759503709842</updated>
+      <workItem from="1760925980549" duration="1146000" />
+      <workItem from="1760928690186" duration="5239000" />
     </task>
+    <task id="LOCAL-00001" summary="feat: enhance Ball class with improved movement and rendering">
+      <option name="closed" value="true" />
+      <created>1760930805966</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1760930805966</updated>
+    </task>
+    <task id="LOCAL-00002" summary="feat: enhance Brick class with rendering improvements and hit mechanics">
+      <option name="closed" value="true" />
+      <created>1760930823896</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1760930823896</updated>
+    </task>
+    <task id="LOCAL-00003" summary="chore: add comprehensive .gitignore for Java projects and IDEs">
+      <option name="closed" value="true" />
+      <created>1760931119297</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1760931119297</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fix: wrong ball implement">
+      <option name="closed" value="true" />
+      <created>1760942927327</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1760942927327</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fix: wrong brick implement">
+      <option name="closed" value="true" />
+      <created>1760942974832</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1760942974833</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: enhance Ball class with improved movement and rendering" />
+    <MESSAGE value="feat: enhance Brick class with rendering improvements and hit mechanics" />
+    <MESSAGE value="chore: add comprehensive .gitignore for Java projects and IDEs" />
+    <MESSAGE value="fix: wrong ball implement" />
+    <MESSAGE value="fix: wrong brick implement" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: wrong brick implement" />
   </component>
 </project>
