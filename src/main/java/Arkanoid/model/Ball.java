@@ -14,11 +14,6 @@ public class Ball extends MoveableObject {
     private double smoothX;
     private double smoothY;
 
-    /**
-     * Ball constructor with paddle parameter.
-     *
-     * @param paddle the paddle to which the ball is initially stuck
-     */
     public Ball(Paddle paddle) {
 <<<<<<< HEAD
         
@@ -38,19 +33,11 @@ public class Ball extends MoveableObject {
 >>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
     }
 
-    /**
-     * Update the ball position and check for wall collisions.
-     */
     @Override
     public void update() {
         update(1.0 / 60.0); // Default for compatibility
     }
 
-    /**
-     * Update the ball position based on delta time and check for wall collisions.
-     *
-     * @param deltaTime time elapsed from last update
-     */
     @Override
     public void update(double deltaTime) {
         if (stuck) {
@@ -71,10 +58,6 @@ public class Ball extends MoveableObject {
         }
     }
 
-    /**
-     * Render the ball on the canvas with a radial gradient for 3D effect.
-     * @param gc the graphics context used to draw the ball on the canvas
-     */
     @Override
     public void render(GraphicsContext gc) {
         // Create a radial gradient for a 3D effect
@@ -88,9 +71,6 @@ public class Ball extends MoveableObject {
         gc.fillOval(x, y, radius * 2, radius * 2);
     }
 
-    /**
-     * Check for collisions with the walls and adjust position and velocity accordingly.
-     */
     private void checkWallCollision() {
         // Left and right walls
         if (smoothX <= 0) {
@@ -112,9 +92,6 @@ public class Ball extends MoveableObject {
         y = smoothY;
     }
 
-    /**
-     * Launch the ball from the paddle at a random upward angle.
-     */
     public void launch() {
         if (stuck) {
             stuck = false;
@@ -125,9 +102,6 @@ public class Ball extends MoveableObject {
         }
     }
 
-    /**
-     * Reset the ball to the paddle and set it to stuck state.
-     */
     public void reset() {
         stuck = true;
         x = paddle.getCenterX() - radius;
@@ -138,24 +112,14 @@ public class Ball extends MoveableObject {
         velocityY = 0;
     }
 
-    /**
-     * Reverse the ball's Y velocity (used for bouncing).
-     */
     public void reverseY() {
         velocityY = -velocityY;
     }
 
-    /**
-     * Reverse the ball's X velocity (used for bouncing).
-     */
     public void reverseX() {
         velocityX = -velocityX;
     }
 
-    /**
-     * Adjust the ball's angle based on where it hit the paddle.
-     * @param paddleHitPosition position on the paddle where the ball hit (-1 to 1)
-     */
     public void adjustAngle(double paddleHitPosition) {
         // paddleHitPosition: -1 (left edge) to 1 (right edge)
         double angle = paddleHitPosition * 60; // Max 60 degrees from vertical
@@ -165,25 +129,16 @@ public class Ball extends MoveableObject {
         velocityY = -Math.abs(currentSpeed * Math.cos(Math.toRadians(angle)));
     }
 
-    /**
-     * Increase the ball's speed up to a maximum limit.
-     */
     public void increaseSpeed() {
         speed = Math.min(speed * 1.2, Constants.BALL_SPEED * 2);
         updateVelocity();
     }
 
-    /**
-     * Decrease the ball's speed down to a minimum limit.
-     */
     public void decreaseSpeed() {
         speed = Math.max(speed * 0.8, Constants.BALL_SPEED * 0.5);
         updateVelocity();
     }
 
-    /**
-     * Update the velocity components based on the current speed.
-     */
     private void updateVelocity() {
         double currentSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
         if (currentSpeed > 0) {
@@ -192,26 +147,14 @@ public class Ball extends MoveableObject {
         }
     }
 
-    /**
-     * Check if the ball is out of bounds (below the window).
-     * @return true if the ball is out of bounds, false otherwise
-     */
     public boolean isOutOfBounds() {
         return y > Constants.WINDOW_HEIGHT;
     }
 
-    /**
-     * Check if the ball is currently stuck to the paddle.
-     * @return true if the ball is stuck, false otherwise
-     */
     public boolean isStuck() {
         return stuck;
     }
 
-    /**
-     * Get the radius of the ball.
-     * @return the radius of the ball
-     */
     public int getRadius() {
         return radius;
     }
