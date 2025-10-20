@@ -7,6 +7,7 @@ import Arkanoid.model.PowerUps;
 
 import java.util.List;
 
+
 public class CollisionManager {
 
     public void checkBallPaddleCollision(Ball ball, Paddle paddle) {
