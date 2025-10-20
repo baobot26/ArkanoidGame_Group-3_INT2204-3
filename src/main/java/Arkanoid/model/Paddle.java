@@ -8,65 +8,83 @@ public class Paddle extends MoveableObject {
     private final double initialWidth;
     private boolean movingLeft;
     private boolean movingRight;
-    private double smoothX;
+    private double smoothX;  // For smooth interpolation
 
     public Paddle() {
         super(
-                (double) (Constants.WINDOW_WIDTH - Constants.PADDLE_WIDTH) /2,
-                (double) Constants.WINDOW_HEIGHT - Constants.PADDLE_HEIGHT - 30,
+                Constants.WINDOW_WIDTH / 2.0 - Constants.PADDLE_WIDTH / 2.0,
+                Constants.PADDLE_Y,
                 Constants.PADDLE_WIDTH,
                 Constants.PADDLE_HEIGHT,
                 Constants.PADDLE_SPEED
         );
-        this.initialWidth = width;
-        this.smoothX = this.x;
+        this.initialWidth = Constants.PADDLE_WIDTH;
+        this.movingLeft = false;
+        this.movingRight = false;
+        this.smoothX = x;
     }
 
     @Override
     public void update() {
-        update(1.0/60.0);
+        update(1.0 / 60.0); // Default for compatibility
     }
 
     @Override
     public void update(double deltaTime) {
-        if (movingLeft && !movingRight)  {
-            x -= Constants.PADDLE_SPEED * deltaTime;
+        // Calculate target velocity
+        double targetVelocityX = 0;
+
+        if (movingLeft && !movingRight) {
+            targetVelocityX = -speed;
+        } else if (movingRight && !movingLeft) {
+            targetVelocityX = speed;
         }
-        else if (movingRight && !movingLeft) {
-            x += Constants.PADDLE_SPEED * deltaTime;
+
+        // Smooth acceleration/deceleration
+        velocityX += (targetVelocityX - velocityX) * 0.3;
+
+        // Update smooth position with delta time
+        double speedMultiplier = deltaTime * 60.0; // 60 FPS equivalent
+        smoothX += velocityX * speedMultiplier;
+
+        // Keep paddle within bounds
+        if (smoothX < 0) {
+            smoothX = 0;
+            velocityX = 0;
         }
-        // Clamp paddle pos so as not to exceed window bounds (＾▽＾)
-        x = Math.max(0, Math.min(x, Constants.WINDOW_WIDTH - width));
-        // Math.min(x, max) ensures x doesnt exceed max, Math.max(0, ...) ensures x doesnt go below 0 ( ´ ω ` )
+        if (smoothX + width > Constants.WINDOW_WIDTH) {
+            smoothX = Constants.WINDOW_WIDTH - width;
+            velocityX = 0;
+        }
+
+        // Apply to actual position
+        x = smoothX;
     }
 
     @Override
     public void render(GraphicsContext gc) {
         gc.setFill(Constants.PADDLE_COLOR);
-        gc.fillRect(x,  y, width, height);
+        gc.fillRoundRect(x, y, width, height, 5, 5);
+
+        // Add a highlight effect
+        gc.setFill(Color.rgb(255, 255, 255, 0.3));
+        gc.fillRoundRect(x, y, width, height / 2, 5, 5);
     }
 
     public void expand() {
-        double maxWidth = initialWidth * 2.0;
-        //TODO: do we have any limit to how much the paddle can expand? (shrink too) (・・ ) ?
-        double newWidth = Math.min(width * 1.5, maxWidth); // Width increase by 50%, capped at double the initial width
-        double centerX = x + width / 2;
-        width = newWidth;
-        // Re-center paddle after width change + clamp within window bounds
-        x = Math.max(0, Math.min(centerX - width / 2, Constants.WINDOW_WIDTH - width));
+        width = Math.min(width * 1.5, Constants.WINDOW_WIDTH * 0.4);
     }
 
     public void shrink() {
-        double minWidth = initialWidth * 0.5;
-        double newWidth = Math.max(width * 0.5, minWidth); // Width decrease by 50%, floored at half the initial width
-        double centerX = x + width / 2;
-        width = newWidth;
-        x = Math.max(0, Math.min(centerX - width / 2, Constants.WINDOW_WIDTH - width));
+        width = Math.max(width * 0.7, initialWidth * 0.5);
     }
 
     public void reset() {
+        x = Constants.WINDOW_WIDTH / 2.0 - width / 2.0;
+        y = Constants.PADDLE_Y;
         width = initialWidth;
-        x = (Constants.WINDOW_WIDTH - width) / 2; // Center
+        smoothX = x;
+        velocityX = 0;
     }
 
     // Getters and setters
