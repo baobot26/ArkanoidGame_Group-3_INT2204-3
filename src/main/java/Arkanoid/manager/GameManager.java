@@ -1,5 +1,11 @@
 package Arkanoid.manager;
 
+import Arkanoid.model.*;
+import Arkanoid.util.Constants;
+import java.util.*;
+//TEAM NOTE: (Azusuki) Paddle logic added
+
+
 public class GameManager {
     private GameState currentState;
     private Paddle paddle;
@@ -11,9 +17,20 @@ public class GameManager {
     private Random random;
 
     public GameManager() {
+        initializeGame();
     }
-
+//Azusuki: initializeGame method created to set up initial game state and objects
     private void initializeGame() {
+        currentState = GameState.MENU;
+        paddle = new Paddle();
+        balls = new ArrayList<>();
+        bricks = new ArrayList<>();
+        powerUps = new ArrayList<>();
+        collisionManager = new CollisionManager(this);
+        scoreManager = new ScoreManager();
+        random = new Random();
+        createLevel();
+        resetBall();
     }
 
     private void createLevel() {
@@ -22,17 +39,40 @@ public class GameManager {
     private BrickType determineBrickType() {
         return null;
     }
-
+// Azusuki: update method modified to include paddle and power-up updates, as well as collision checks
     public void update() {
+        //Azusuki: Only update game objects if the game is in PLAYING state
+        if (currentState == GameState.PLAYING) {
+            paddle.update();
+            for(Ball ball : balls) {
+                ball.update();
+            }
+            for (PowerUps powerUps : powerUps) {
+                powerUps.update();
+            }
+            checkCollisions();
+        }
     }
 
     private void checkCollisions() {
+        collisionManager.checkBallPaddleCollision();
+        collisionManager.checkBallBrickCollision();
+        collisionManager.checkPaddlePowerUpCollision();
     }
 
     private void spawnPowerUp() {
     }
-
-    private void applyPowerUp(PowerUpType type) {
+// Azusuki: Paddle shrink and expand power-ups logic added
+    // Azusuki: changed to public to be accessed from CollisionManager
+    public void applyPowerUp(PowerUpType type) {
+        switch (type) {
+            case EXPAND_PADDLE:
+                paddle.expand();
+                break;
+            case SHRINK_PADDLE:
+                paddle.shrink();
+                break;
+        }
     }
 
     private boolean isLevelComplete() {
@@ -40,15 +80,21 @@ public class GameManager {
     }
 
     public void startGame() {
+        currentState = GameState.PLAYING;
     }
 
     public void pauseGame() {
+        currentState = GameState.PAUSED;
     }
 
     public void nextLevel() {
+        createLevel();
+        resetLevel();
     }
-
+//Azusuki: paddle and ball is reset at level start
     private void resetLevel() {
+        paddle.reset();
+        resetBall();
     }
 
     private void resetBall() {
