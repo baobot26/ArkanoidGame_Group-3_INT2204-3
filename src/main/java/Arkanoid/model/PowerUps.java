@@ -1,5 +1,9 @@
 package Arkanoid.model;
 
+import Arkanoid.util.Constants;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 public class PowerUps extends MoveableObject {
     private PowerUpType type;
     private boolean collected;

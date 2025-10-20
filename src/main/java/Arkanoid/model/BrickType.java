@@ -1,9 +1,9 @@
 package Arkanoid.model;
 
 public enum BrickType {
-    NORMAL(1),
-    HARD(2),
-    UNBREAKABLE(3);
+    NORMAL(1),      // 1 hit
+    HARD(2),        // 2 hits
+    UNBREAKABLE(3); // no hit
 
     private final int hits;
 
