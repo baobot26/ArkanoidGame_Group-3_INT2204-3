@@ -1,8 +1,10 @@
 package Arkanoid.manager;
 
 import Arkanoid.model.*;
-import Arkanoid.util.Constants;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 //TEAM NOTE: (Azusuki) Paddle logic added
 
 
