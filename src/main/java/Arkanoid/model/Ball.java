@@ -8,6 +8,7 @@ public class Ball extends MoveableObject {
     private double smoothY;
 
     public Ball(Paddle paddle) {
+        
     }
 
     @Override

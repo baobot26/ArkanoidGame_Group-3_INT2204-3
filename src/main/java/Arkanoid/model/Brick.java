@@ -1,5 +1,8 @@
 package Arkanoid.model;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 public class Brick extends GameObject {
     private BrickType type;
     private int hitsRemaining;
@@ -10,22 +13,31 @@ public class Brick extends GameObject {
         super(x, y, width, height);
         this.type = type;
         this.color = color;
+        this.destroyed = false;
     }
 
     @Override
     public void update() {
+        // bricks dont move
     }
 
     @Override
     public void update(double deltaTime) {
+        // bricks dont move
     }
 
     @Override
     public void render(GraphicsContext gc) {
+
     }
 
     public boolean hit() {
-        return false;
+        // the get hit implement
+        if (type.UNBREAKABLE == type) {
+            return false;
+        }
+
+        
     }
 
     public boolean isDestroyed() {
@@ -37,6 +49,6 @@ public class Brick extends GameObject {
     }
 
     public int getScore() {
-        return 0;
+        
     }
 }
