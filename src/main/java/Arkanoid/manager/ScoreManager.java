@@ -12,8 +12,7 @@ public class ScoreManager {
 
     public void addScore(int points) {
         score += points;
-    }
-
+      
     public void loseLife() {
         lives--;
     }

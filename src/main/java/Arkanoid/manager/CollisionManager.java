@@ -1,9 +1,9 @@
 package Arkanoid.manager;
 
-import Arkanoid.model.*;
-
-import java.util.List;
-import java.util.Iterator;
+import Arkanoid.model.Ball;
+import Arkanoid.model.Brick;
+import Arkanoid.model.Paddle;
+import Arkanoid.model.PowerUps;
 
 public class CollisionManager {
     private GameManager gameManager;

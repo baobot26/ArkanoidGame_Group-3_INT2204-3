@@ -6,46 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="2e74defe-29f5-476c-ae78-8074b9e1cb93" name="Changes" comment="" />
     <list default="true" id="2e74defe-29f5-476c-ae78-8074b9e1cb93" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/CollisionManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/GameManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/ScoreManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Ball.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Brick.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/BrickType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/GameObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/GameState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/MoveableObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Paddle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUpType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUps.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/renderer/Renderer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/util/Constants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/util/InputHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/view/GameView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Arkanoid/BallTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/Ball.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/Brick.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/GameManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/GameObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/MoveableObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/Paddle.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/PowerUps.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/src/Renderer.java" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/CollisionManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/CollisionManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/GameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/GameManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/ScoreManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/ScoreManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/BrickType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/BrickType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/GameObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/GameObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/util/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/util/InputHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +84,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Merging Azusuki&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dkay&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/armordkay/git clone/ArkanoidGame_Group-3_INT2204-3&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
