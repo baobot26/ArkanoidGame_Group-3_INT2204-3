@@ -22,7 +22,10 @@ public class Brick extends GameObject {
         super(x, y, width, height);
         this.type = type;
         this.color = color;
+<<<<<<< HEAD
+=======
         this.hitsRemaining = type.getHits();
+>>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
         this.destroyed = false;
     }
 
@@ -31,7 +34,11 @@ public class Brick extends GameObject {
      */
     @Override
     public void update() {
+<<<<<<< HEAD
+        // bricks dont move
+=======
         // Bricks do not move
+>>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
     }
 
     /**
@@ -40,7 +47,11 @@ public class Brick extends GameObject {
      */
     @Override
     public void update(double deltaTime) {
+<<<<<<< HEAD
+        // bricks dont move
+=======
         // Bricks do not move
+>>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
     }
 
     /**
@@ -49,6 +60,9 @@ public class Brick extends GameObject {
      */
     @Override
     public void render(GraphicsContext gc) {
+<<<<<<< HEAD
+
+=======
         if (destroyed) return;
 
         // Draw brick with gradient
@@ -78,6 +92,7 @@ public class Brick extends GameObject {
             gc.setLineWidth(2);
             gc.strokeLine(x + 5, y + height / 2, x + width - 5, y + height / 2);
         }
+>>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
     }
 
     /**
@@ -85,6 +100,14 @@ public class Brick extends GameObject {
      * @return true if the brick is destroyed, false otherwise
      */
     public boolean hit() {
+<<<<<<< HEAD
+        // the get hit implement
+        if (type.UNBREAKABLE == type) {
+            return false;
+        }
+
+        
+=======
         // Unbreakable Bricks can not be hit
         if (type == BrickType.UNBREAKABLE) {
             return false;
@@ -99,6 +122,7 @@ public class Brick extends GameObject {
             color = color.darker();
         }
         return false;
+>>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
     }
 
     /**
@@ -122,6 +146,9 @@ public class Brick extends GameObject {
      * @return score the score rewarded for the brick
      */
     public int getScore() {
+<<<<<<< HEAD
+        
+=======
         switch (type) {
             case HARD:
                 return 20;
@@ -131,5 +158,6 @@ public class Brick extends GameObject {
                 return 10;
         }
         return 0;
+>>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
     }
 }
