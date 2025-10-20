@@ -15,6 +15,9 @@ public class Ball extends MoveableObject {
     private double smoothY;
 
     public Ball(Paddle paddle) {
+<<<<<<< HEAD
+        
+=======
         super(
                 Constants.WINDOW_WIDTH / 2.0,
                 Constants.PADDLE_Y - Constants.BALL_RADIUS,
@@ -27,6 +30,7 @@ public class Ball extends MoveableObject {
         this.paddle = paddle;
         this.smoothX = x;
         this.smoothY = y;
+>>>>>>> d16885b01ee24c6056ed2383060eb6c71ee3474a
     }
 
     @Override
