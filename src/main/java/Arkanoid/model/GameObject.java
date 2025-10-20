@@ -29,6 +29,7 @@ public abstract class GameObject {
         return new javafx.geometry.BoundingBox(x, y, width, height);
     }
 
+    // Getters and setters
     public double getX() { return x; }
     public void setX(double x) { this.x = x; }
 
