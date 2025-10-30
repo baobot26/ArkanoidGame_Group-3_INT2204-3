@@ -154,4 +154,24 @@ public class Ball extends MoveableObject {
     public int getRadius() {
         return radius;
     }
+
+    public void setStuck(boolean stuck) {
+        this.stuck = stuck;
+    }
+
+    public double getSmoothX() {
+        return smoothX;
+    }
+
+    public double getSmoothY() {
+        return smoothY;
+    }
+
+    public void setSmoothX(double smoothX) {
+        this.smoothX = smoothX;
+    }
+
+    public void setSmoothY(double smoothY) {
+        this.smoothY = smoothY;
+    }
 }

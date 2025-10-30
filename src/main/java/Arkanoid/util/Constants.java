@@ -3,6 +3,9 @@ package Arkanoid.util;
 import javafx.scene.paint.Color;
 
 public class Constants {
+    // Comparison epsilon
+    public static final double EPSILON = 1e-6;
+
     // Window dimensions
     public static final int WINDOW_WIDTH = 800;
     public static final int WINDOW_HEIGHT = 600;
