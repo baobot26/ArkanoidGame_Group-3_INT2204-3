@@ -1,7 +1,5 @@
-package Arkanoid;
+package Arkanoid.model;
 
-import Arkanoid.model.Brick;
-import Arkanoid.model.BrickType;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 
