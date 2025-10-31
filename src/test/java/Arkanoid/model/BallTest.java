@@ -1,7 +1,5 @@
-package Arkanoid;
+package Arkanoid.model;
 
-import Arkanoid.model.Ball;
-import Arkanoid.model.Paddle;
 import Arkanoid.util.Constants;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
