@@ -6,6 +6,11 @@ import Arkanoid.model.*;
 import Arkanoid.util.Constants;
 import java.util.*;
 
+/**
+ * Central coordinator for game state, entities and level progression.
+ * Owns paddle/balls/bricks/power-ups, updates collisions and scoring,
+ * and communicates with {@link Arkanoid.level.LevelManager} to load and advance levels.
+ */
 public class GameManager {
     private GameState currentState;
     private Paddle paddle;
@@ -31,8 +36,10 @@ public class GameManager {
         this.activePowerUps = new HashMap<>();
 
         // Initialize Level Manager
-        this.levelManager = new LevelManager();
-        this.levelManager.loadLevels(3); // Load 3 levels
+    this.levelManager = new LevelManager();
+    int detected = Arkanoid.level.LevelLoader.countAvailableLevels(50);
+    if (detected <= 0) detected = 3; // fallback
+    this.levelManager.loadLevels(detected);
 
         initializeGame();
     }
@@ -48,33 +55,49 @@ public class GameManager {
     }
 
     /**
-     * Load level hiện tại từ LevelManager
+     * Loads the current level from LevelManager and applies level configuration.
      */
     private void loadCurrentLevel() {
         currentLevel = levelManager.getCurrentLevel();
 
         if (currentLevel != null) {
-            System.out.println("🎮 Loading level: " + currentLevel.getLevelName() +
+            System.out.println("Loading level: " + currentLevel.getLevelName() +
                     " (Level " + currentLevel.getLevelNumber() + ")");
 
-            // Initialize level (không reset để tránh double init)
-            // Level đã được initialize trong LevelManager.loadLevels()
+            // Level is already initialized in LevelManager.loadLevels()
 
-            // Load bricks từ level
+            // Load bricks from level
             bricks.clear();
             bricks.addAll(currentLevel.getBricks());
 
-            System.out.println("   ✅ Loaded " + bricks.size() + " bricks from level data");
+            System.out.println("Loaded " + bricks.size() + " bricks from level data");
+                // Apply level configuration: ball speed and lives
+                try {
+                    double levelBallSpeed = currentLevel.getBallSpeed();
+                    int levelLives = currentLevel.getInitialLives();
 
-            // Debug: In ra vài brick đầu tiên
+                    // Update lives if provided
+                    if (levelLives > 0) {
+                        scoreManager.setLives(levelLives);
+                    }
+
+                    // Update ball speed for all existing balls
+                    for (Ball b : balls) {
+                        b.setBaseSpeed(levelBallSpeed);
+                    }
+                } catch (Exception ignored) {
+                    // keep defaults on malformed level data
+                }
+
+            // Debug: Print first few bricks
             for (int i = 0; i < Math.min(3, bricks.size()); i++) {
                 Brick b = bricks.get(i);
                 System.out.println("   Brick " + i + ": type=" + b.getType() +
                         ", pos=(" + b.getX() + "," + b.getY() + ")");
             }
         } else {
-            System.out.println("⚠️ Current level is NULL! Using legacy level generation");
-            // Fallback: tạo level cũ nếu không load được
+            System.out.println("Current level is NULL! Using legacy level generation");
+            // Fallback: create legacy level if loading failed
             createLegacyLevel();
         }
     }
@@ -113,6 +136,10 @@ public class GameManager {
         return BrickType.NORMAL;
     }
 
+    /**
+     * Advances the game simulation by deltaTime when in PLAYING state.
+     * Updates paddle, balls, power-ups, checks collisions and level completion.
+     */
     public void update(double deltaTime) {
         if (currentState != GameState.PLAYING) return;
 
@@ -275,23 +302,34 @@ public class GameManager {
         return true;
     }
 
+    /**
+     * Starts a new game from level 1 and enters PLAYING state.
+     */
     public void startGame() {
         currentState = GameState.PLAYING;
         scoreManager.reset();
         levelManager.restartGame(); // Reset về level 1
-        initializeGame();
+    initializeGame();
     }
 
+    /**
+     * Toggles between PLAYING and PAUSED states.
+     */
     public void pauseGame() {
         if (currentState == GameState.PLAYING) currentState = GameState.PAUSED;
         else if (currentState == GameState.PAUSED) currentState = GameState.PLAYING;
     }
 
+    /**
+     * Advances to the next level if available, otherwise sets GAME_OVER when all levels are finished.
+     */
     public void nextLevel() {
         boolean hasNextLevel = levelManager.nextLevel();
 
-        if (hasNextLevel) {
+    if (hasNextLevel) {
             scoreManager.nextLevel();
+            // Ensure we reference the new current level from LevelManager
+            currentLevel = levelManager.getCurrentLevel();
             resetLevel();
             currentState = GameState.PLAYING;
         } else {
@@ -302,18 +340,32 @@ public class GameManager {
     }
 
     private void resetLevel() {
+        // Always refresh the current level from the manager to avoid stale reference
+        if (levelManager != null) {
+            currentLevel = levelManager.getCurrentLevel();
+        }
         paddle.reset();
+        // Clear movement flags to avoid drift when entering a new level
+        paddle.setMovingLeft(false);
+        paddle.setMovingRight(false);
         balls.clear();
-        balls.add(new Ball(paddle));
+        Ball newBall = new Ball(paddle);
+        // Áp dụng tốc độ bóng theo level hiện tại
+        if (currentLevel != null) {
+            newBall.setBaseSpeed(currentLevel.getBallSpeed());
+        }
+        balls.add(newBall);
         powerUps.clear();
         activePowerUps.clear();
 
         // Reset bricks về trạng thái ban đầu
         if (currentLevel != null) {
-            currentLevel.reset(); // Re-initialize từ LevelData
+            currentLevel.reset(); // Re-initialize from LevelData
             bricks.clear();
             bricks.addAll(currentLevel.getBricks());
-            System.out.println("🔄 Reset level: " + currentLevel.getLevelName());
+            System.out.println("Reset level: " + currentLevel.getLevelName());
+            // Reset lives from level when resetting
+            scoreManager.setLives(currentLevel.getInitialLives());
         } else {
             loadCurrentLevel();
         }
@@ -324,6 +376,9 @@ public class GameManager {
         balls.add(new Ball(paddle));
     }
 
+    /**
+     * Launches any balls currently stuck to the paddle.
+     */
     public void launchBall() {
         for (Ball ball : balls) {
             if (ball.isStuck()) ball.launch();
@@ -331,40 +386,49 @@ public class GameManager {
     }
 
     /**
-     * Chọn level cụ thể (từ Level Selection UI)
-     */
-    /**
-     * Chọn level cụ thể (từ Level Selection UI)
+     * Selects a specific level by 1-based index and resets state to play it.
+     * Intended to be invoked by the Level Selection UI.
      */
     public void selectLevel(int levelNumber) {
         if (levelManager.selectLevel(levelNumber)) {
-            currentLevel = levelManager.getCurrentLevel(); // ✅ cập nhật level hiện tại
-            resetLevel();                                  // ✅ nạp lại bricks theo level mới
+            currentLevel = levelManager.getCurrentLevel(); // update current level
+            resetLevel();                                  // reload bricks for the new level
             currentState = GameState.PLAYING;
-            System.out.println("✅ Selected Level " + currentLevel.getLevelNumber() + ": " + currentLevel.getLevelName());
+            System.out.println("Selected Level " + currentLevel.getLevelNumber() + ": " + currentLevel.getLevelName());
         } else {
-            System.out.println("⚠️ Không thể chọn level " + levelNumber + " (không tồn tại)");
+            System.out.println("Cannot select level " + levelNumber + " (does not exist)");
         }
     }
 
 
     /**
-     * Mở màn hình chọn level
+     * Shows the level selection/menu state.
      */
     public void showLevelSelection() {
         currentState = GameState.MENU;
     }
 
     // Getters
+    /** @return the current high-level game state (menu, playing, etc.). */
     public GameState getCurrentState() { return currentState; }
+    /** @return the player paddle instance. */
     public Paddle getPaddle() { return paddle; }
+    /** @return a live list of active balls. */
     public List<Ball> getBalls() { return balls; }
+    /** @return a live list of bricks in the current level. */
     public List<Brick> getBricks() { return bricks; }
+    /** @return a live list of active power-ups. */
     public List<PowerUps> getPowerUps() { return powerUps; }
+    /** @return the score manager tracking score, lives and level index. */
     public ScoreManager getScoreManager() { return scoreManager; }
+    /** @return the level manager used to load and navigate levels. */
     public LevelManager getLevelManager() { return levelManager; }
+    /** @return the currently loaded level or null if using legacy fallback. */
     public Level getCurrentLevel() { return currentLevel; }
 
+    /**
+     * Sets the high-level game state (e.g., MENU, PLAYING, PAUSED, etc.).
+     */
     public void setCurrentState(GameState gameState) {
         this.currentState = gameState;
     }
