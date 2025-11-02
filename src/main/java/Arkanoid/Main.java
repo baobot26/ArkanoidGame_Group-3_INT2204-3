@@ -8,6 +8,10 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * JavaFX application entry point. Wires together GameManager, GameView,
+ * and LevelSelectionView, and drives the main animation loop.
+ */
 public class Main extends Application {
     private GameManager gameManager;
     private GameView gameView;

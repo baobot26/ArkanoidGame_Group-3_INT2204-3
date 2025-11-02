@@ -1,5 +1,8 @@
 package Arkanoid.model;
 
+/**
+ * Enumeration of available power-up effects.
+ */
 public enum PowerUpType {
     EXPAND_PADDLE,
     SHRINK_PADDLE,

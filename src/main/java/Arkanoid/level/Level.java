@@ -6,8 +6,9 @@ import Arkanoid.util.Constants;
 import javafx.scene.paint.Color;
 
 /**
- * Concrete implementation của Level
- * Khởi tạo level từ LevelData
+ * Concrete Level implementation built from {@link LevelData}.
+ * Converts {@code LevelData.BrickData} instances into concrete bricks using layout constants
+ * and exposes derived per-level settings (ball speed, initial lives).
  */
 public class Level extends AbstractLevel {
     private LevelData levelData;
@@ -22,33 +23,30 @@ public class Level extends AbstractLevel {
         bricks.clear();
 
         if (levelData.getBricks() != null) {
-            // Load từ LevelData
+            // Load from LevelData
             for (LevelData.BrickData brickData : levelData.getBricks()) {
                 Brick brick = createBrickFromData(brickData);
                 bricks.add(brick);
             }
         } else {
-            // Fallback: tạo level mặc định nếu không có data
+            // Fallback: create default layout when no data exists
             createDefaultLevel();
         }
 
-        // Backup initial state để reset về sau
+        // Backup initial state for later resets
         backupInitialState();
-
-        System.out.println("   📦 Initialized " + bricks.size() + " bricks");
+        System.out.println("Initialized " + bricks.size() + " bricks");
     }
 
     @Override
     public void reset() {
-        // Re-initialize level từ levelData
+    // Re-initialize level from levelData
         initialize();
     }
 
-    /**
-     * Tạo brick từ BrickData
-     */
+    /** Creates a brick from BrickData. */
     private Brick createBrickFromData(LevelData.BrickData data) {
-        // Tính tọa độ dựa trên row và col
+        // Position computed from row/col
         double x = Constants.BRICK_OFFSET_X + data.getCol() * (Constants.BRICK_WIDTH + Constants.BRICK_PADDING);
         double y = Constants.BRICK_OFFSET_Y + data.getRow() * (Constants.BRICK_HEIGHT + Constants.BRICK_PADDING);
 
@@ -61,9 +59,7 @@ public class Level extends AbstractLevel {
         return new Brick(x, y, Constants.BRICK_WIDTH, Constants.BRICK_HEIGHT, type, color);
     }
 
-    /**
-     * Parse string type thành BrickType enum
-     */
+    /** Parses string to BrickType enum. */
     private BrickType parseBrickType(String typeStr) {
         if (typeStr == null) return BrickType.NORMAL;
 
@@ -77,9 +73,7 @@ public class Level extends AbstractLevel {
         }
     }
 
-    /**
-     * Parse hex color string thành Color
-     */
+    /** Parses a hex color string to Color. */
     private Color parseColor(String colorStr) {
         if (colorStr == null || colorStr.isEmpty()) {
             return Constants.BRICK_COLORS[0]; // Default red
@@ -92,9 +86,7 @@ public class Level extends AbstractLevel {
         }
     }
 
-    /**
-     * Tạo level mặc định nếu không có data
-     */
+    /** Creates a default full grid when no data exists. */
     private void createDefaultLevel() {
         for (int row = 0; row < Constants.BRICK_ROWS; row++) {
             for (int col = 0; col < Constants.BRICK_COLS; col++) {
@@ -109,16 +101,12 @@ public class Level extends AbstractLevel {
         }
     }
 
-    /**
-     * Lấy ball speed của level này
-     */
+    /** Returns the configured ball speed for this level. */
     public double getBallSpeed() {
         return levelData.getBallSpeed();
     }
 
-    /**
-     * Lấy số lives ban đầu của level
-     */
+    /** Returns the initial lives for this level. */
     public int getInitialLives() {
         return levelData.getLives();
     }

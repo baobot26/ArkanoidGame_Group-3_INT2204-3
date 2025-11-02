@@ -1,5 +1,8 @@
 package Arkanoid.model;
 
+/**
+ * Brick hardness type and the number of hits required before destruction.
+ */
 public enum BrickType {
     NORMAL(1),      // 1 hit
     HARD(2),        // 2 hits

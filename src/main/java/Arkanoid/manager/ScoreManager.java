@@ -1,5 +1,9 @@
 package Arkanoid.manager;
 
+/**
+ * Tracks score, high score, current level index and remaining lives.
+ * Provides helpers for adding score, managing lives, and progressing to the next level.
+ */
 public class ScoreManager {
     private int score;
     private int highScore;
@@ -57,5 +61,9 @@ public class ScoreManager {
 
     public int getLives() {
         return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
     }
 }

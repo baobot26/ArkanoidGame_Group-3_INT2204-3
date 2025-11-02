@@ -9,42 +9,46 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * Class để load và lưu level từ JSON files
+ * Loads and saves level configurations from JSON files.
+ * <p>
+ * Prefers classpath resources under "/levels" packaged from src/main/resources.
+ * Falls back to a development filesystem path (resources/levels) when running from IDE.
+ * Also provides helpers to check existence and count available sequential levels.
  */
 public class LevelLoader {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final String LEVELS_PATH = "resources/levels/"; // fallback khi chạy trực tiếp từ IDE
+    private static final String LEVELS_PATH = "resources/levels/"; // fallback when running from IDE
 
     /**
-     * Load level từ file JSON (ưu tiên đọc từ resources)
-     * @param levelNumber Số thứ tự level (1, 2, 3,...)
-     * @return LevelData object hoặc null nếu lỗi
+     * Loads a level JSON by number from classpath (preferred) or filesystem fallback.
+     * @param levelNumber 1-based level index (level1.json, level2.json, ...)
+     * @return parsed {@link LevelData} or null on error/missing file
      */
     public static LevelData loadLevel(int levelNumber) {
-        String filename = "/levels/level" + levelNumber + ".json"; // trong resources
+    String filename = "/levels/level" + levelNumber + ".json"; // in resources
 
         try (InputStream is = LevelLoader.class.getResourceAsStream(filename)) {
             if (is != null) {
-                // Load từ classpath (resources)
+                // Load from classpath (resources)
                 try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
                     LevelData data = gson.fromJson(reader, LevelData.class);
-                    System.out.println("✅ Loaded level " + levelNumber + " from resources: " + data.getName());
+                    System.out.println("Loaded level " + levelNumber + " from resources: " + data.getName());
                     return data;
                 }
             } else {
-                // fallback: đọc từ thư mục resources/levels ngoài IDE
+                // Fallback: read from resources/levels on filesystem
                 String fallback = LEVELS_PATH + "level" + levelNumber + ".json";
                 if (Files.exists(Paths.get(fallback))) {
                     String json = new String(Files.readAllBytes(Paths.get(fallback)), StandardCharsets.UTF_8);
                     LevelData data = gson.fromJson(json, LevelData.class);
-                    System.out.println("✅ Loaded level " + levelNumber + " from filesystem: " + data.getName());
+                    System.out.println("Loaded level " + levelNumber + " from filesystem: " + data.getName());
                     return data;
                 } else {
-                    System.err.println("❌ Không tìm thấy level file: " + fallback);
+                    System.err.println("Missing level file: " + fallback);
                 }
             }
         } catch (Exception e) {
-            System.err.println("❌ Lỗi khi load level " + levelNumber + ": " + e.getMessage());
+            System.err.println("Error loading level " + levelNumber + ": " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -52,9 +56,7 @@ public class LevelLoader {
     }
 
     /**
-     * Load tất cả levels có sẵn
-     * @param maxLevel Số level tối đa cần load
-     * @return Mảng các LevelData (một số phần tử có thể null nếu level không tồn tại)
+     * Loads levels 1..maxLevel, returning an array (entries may be null if missing).
      */
     public static LevelData[] loadAllLevels(int maxLevel) {
         LevelData[] levels = new LevelData[maxLevel];
@@ -65,9 +67,7 @@ public class LevelLoader {
     }
 
     /**
-     * Kiểm tra xem level có tồn tại không
-     * @param levelNumber Số thứ tự level
-     * @return true nếu có file hợp lệ
+     * Returns true if a level JSON exists either in classpath or filesystem fallback.
      */
     public static boolean levelExists(int levelNumber) {
         String pathInResources = "/levels/level" + levelNumber + ".json";
@@ -78,32 +78,43 @@ public class LevelLoader {
     }
 
     /**
-     * Save level ra file JSON (chỉ dùng cho editor hoặc debug)
-     * @param levelData LevelData cần save
-     * @return true nếu lưu thành công
+     * Counts sequential level files starting from 1 up to the first gap or maxScan.
+     */
+    public static int countAvailableLevels(int maxScan) {
+        int count = 0;
+        for (int i = 1; i <= maxScan; i++) {
+            if (levelExists(i)) count++;
+            else break; // stop at first missing sequence gap
+        }
+        return count;
+    }
+
+    /**
+     * Saves the given level configuration to the filesystem fallback directory.
+     * @return true on success, false on I/O error
      */
     public static boolean saveLevel(LevelData levelData) {
-        String filename = LEVELS_PATH + "level" + levelData.getLevelNumber() + ".json";
+    String filename = LEVELS_PATH + "level" + levelData.getLevelNumber() + ".json";
 
         try {
-            // Tạo thư mục nếu chưa tồn tại
+            // Create directory if missing
             new File(LEVELS_PATH).mkdirs();
 
-            // Ghi file JSON
+            // Write JSON file
             try (Writer writer = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8)) {
                 gson.toJson(levelData, writer);
             }
 
-            System.out.println("💾 Saved level " + levelData.getLevelNumber() + " → " + filename);
+            System.out.println("Saved level " + levelData.getLevelNumber() + " -> " + filename);
             return true;
         } catch (IOException e) {
-            System.err.println("❌ Lỗi khi lưu level: " + e.getMessage());
+            System.err.println("Error saving level: " + e.getMessage());
             return false;
         }
     }
 
     /**
-     * Tạo level mẫu để test hoặc export JSON
+     * Creates a simple grid-based sample level for debugging or exporting.
      */
     public static LevelData createSampleLevel(int levelNumber, String name) {
         LevelData levelData = new LevelData();
@@ -124,7 +135,7 @@ public class LevelLoader {
     }
 
     /**
-     * Helper: màu cho từng hàng
+     * Picks a color by row index for sample level creation.
      */
     private static String getColorForRow(int row) {
         String[] colors = {

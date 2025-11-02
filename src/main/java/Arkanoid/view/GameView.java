@@ -9,6 +9,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Owns the JavaFX Scene and Canvas used to render the game and binds input handlers.
+ */
 public class GameView {
     private Scene scene;
     private Canvas canvas;
@@ -36,16 +39,22 @@ public class GameView {
         scene.setOnKeyReleased(inputHandler::handleKeyReleased);
     }
 
+    /**
+     * Renders one frame using the internal Renderer.
+     */
     public void render(GameManager gameManager) {
         renderer.render(gameManager);
     }
 
+    /**
+     * @return the JavaFX Scene that hosts the Canvas and input handlers.
+     */
     public Scene getScene() {
         return scene;
     }
 
     /**
-     * Lấy InputHandler để set callback
+     * @return the InputHandler so callers can set callbacks, e.g. level selection.
      */
     public InputHandler getInputHandler() {
         return inputHandler;

@@ -5,9 +5,13 @@ import Arkanoid.model.GameState;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * Centralizes keyboard input handling and routes actions by current GameState.
+ * Exposes a callback to open the Level Selection screen when appropriate.
+ */
 public class InputHandler {
     private final GameManager gameManager;
-    private Runnable onShowLevelSelection; // Callback để mở UI chọn level
+    private Runnable onShowLevelSelection; // Callback to open level selection UI
 
     public InputHandler(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -37,18 +41,21 @@ public class InputHandler {
         switch (code) {
             case SPACE -> gameManager.startGame();
             case L -> {
-                // ✅ Luôn cho phép mở lại Level Selection ở menu
+                // Always allow opening Level Selection in menu
                 if (onShowLevelSelection != null) {
-                    System.out.println("🧩 Opening Level Selection...");
+                    System.out.println("Opening Level Selection...");
                     onShowLevelSelection.run();
                 } else {
-                    System.out.println("⚠️ onShowLevelSelection callback is null!");
+                    System.out.println("onShowLevelSelection callback is null!");
                 }
             }
             case ESCAPE -> {
-                // Nếu đang ở menu mà ấn ESC -> thoát hẳn game
-                System.out.println("🚪 Exiting game...");
+                // Exit game from menu with ESC
+                System.out.println("Exiting game...");
                 System.exit(0);
+            }
+            default -> {
+                // ignore other keys
             }
         }
     }
@@ -66,14 +73,17 @@ public class InputHandler {
             }
             case ESCAPE -> {
                 if (pressed) {
-                    // ✅ ESC: trở về menu chính (và hiển thị lại Level Selection)
-                    System.out.println("🔙 Returning to MENU from PLAYING...");
+                    // ESC: return to main menu (and open Level Selection)
+                    System.out.println("Returning to MENU from PLAYING...");
                     gameManager.setCurrentState(GameState.MENU);
                     if (onShowLevelSelection != null) {
-                        System.out.println("🧩 Opening Level Selection...");
+                        System.out.println("Opening Level Selection...");
                         onShowLevelSelection.run();
                     }
                 }
+            }
+            default -> {
+                // ignore other keys
             }
         }
     }
@@ -83,13 +93,16 @@ public class InputHandler {
         switch (code) {
             case P -> gameManager.pauseGame(); // resume
             case ESCAPE -> {
-                // ESC từ paused -> về menu
-                System.out.println("🔙 Back to MENU from PAUSE");
+                // ESC from paused -> return to menu
+                System.out.println("Back to MENU from PAUSE");
                 gameManager.setCurrentState(GameState.MENU);
                 if (onShowLevelSelection != null) {
-                    System.out.println("🧩 Opening Level Selection from PAUSE...");
+                    System.out.println("Opening Level Selection from PAUSE...");
                     onShowLevelSelection.run();
                 }
+            }
+            default -> {
+                // ignore other keys
             }
         }
     }
@@ -99,12 +112,15 @@ public class InputHandler {
         switch (code) {
             case SPACE -> gameManager.startGame();
             case ESCAPE -> {
-                System.out.println("🔙 Back to MENU from GAME OVER");
+                System.out.println("Back to MENU from GAME OVER");
                 gameManager.setCurrentState(GameState.MENU);
                 if (onShowLevelSelection != null) {
-                    System.out.println("🧩 Opening Level Selection from GAME OVER...");
+                    System.out.println("Opening Level Selection from GAME OVER...");
                     onShowLevelSelection.run();
                 }
+            }
+            default -> {
+                // ignore other keys
             }
         }
     }
@@ -114,12 +130,15 @@ public class InputHandler {
         switch (code) {
             case SPACE -> gameManager.nextLevel();
             case ESCAPE -> {
-                System.out.println("🔙 Back to MENU from LEVEL COMPLETE");
+                System.out.println("Back to MENU from LEVEL COMPLETE");
                 gameManager.setCurrentState(GameState.MENU);
                 if (onShowLevelSelection != null) {
-                    System.out.println("🧩 Opening Level Selection from LEVEL COMPLETE...");
+                    System.out.println("Opening Level Selection from LEVEL COMPLETE...");
                     onShowLevelSelection.run();
                 }
+            }
+            default -> {
+                // ignore other keys
             }
         }
     }
