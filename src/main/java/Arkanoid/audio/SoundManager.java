@@ -94,4 +94,26 @@ public class SoundManager {
         }
         sounds.clear();
     }
+
+    // Convenience helpers for this game
+
+    public void loadDefaultSounds() {
+        // Effects
+        addSound("effect_wall", new Effect("/sounds/effects/wall.wav"));
+        addSound("effect_paddle", new Effect("/sounds/effects/paddle.wav"));
+        addSound("effect_brick", new Effect("/sounds/effects/brick_break.wav"));
+        addSound("effect_score", new Effect("/sounds/effects/score.wav"));
+
+        // Musics / ambient
+        addSound("music_title", new Music("/sounds/musics/title.wav", false));
+        addSound("music_gameover", new Music("/sounds/musics/gameover.wav", false));
+        addSound("music_stage_start", new Music("/sounds/musics/stagestart.wav", false));
+        addSound("ambient_bg", new Ambient("/sounds/musics/title.wav")); // reuse title quietly as ambient
+    }
+
+    public void stopAll() {
+        for (String name : sounds.keySet()) {
+            stopSound(name);
+        }
+    }
 }
