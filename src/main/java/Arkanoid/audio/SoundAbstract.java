@@ -1,45 +1,40 @@
 package Arkanoid.audio;
 
-import javax.sound.sampled.*;
-import java.io.*;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaException;
+import java.io.File;
 
 public abstract class SoundAbstract implements SoundInterface{
     protected float volume = 1.0f;
-    protected Clip clip;
-    /**
-     * Loads an audio clip from classpath (preferred) or filesystem path.
-     * Pass resource path starting with '/' for classpath (e.g. "/sounds/effects/wall.wav").
-     */
+    protected AudioClip clip;
+    /** Loads an audio clip from classpath ("/...") or filesystem path using JavaFX AudioClip. */
     public void load(String soundPath) {
+        String url;
+        if (soundPath != null && soundPath.startsWith("/")) {
+            var res = SoundAbstract.class.getResource(soundPath);
+            if (res == null) throw new RuntimeException("Resource not found: " + soundPath);
+            url = res.toExternalForm();
+        } else {
+            url = new File(soundPath).toURI().toString();
+        }
         try {
-            AudioInputStream audio;
-            InputStream is = null;
-            if (soundPath != null && soundPath.startsWith("/")) {
-                is = SoundAbstract.class.getResourceAsStream(soundPath);
-            }
-            if (is != null) {
-                audio = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
-            } else {
-                audio = AudioSystem.getAudioInputStream(new File(soundPath));
-            }
-            clip = AudioSystem.getClip();
-            clip.open(audio);
-            System.out.println("Loaded sound: " + soundPath + (is != null ? " [classpath]" : " [file]"));
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            throw new RuntimeException(e);
+            clip = new AudioClip(url);
+            setVolume(volume);
+            System.out.println("Loaded sound: " + soundPath);
+        } catch (MediaException ex) {
+            System.err.println("Failed to load sound '" + soundPath + "': " + ex.getMessage());
+            clip = null;
         }
     }
-    /**
-     * Sets linear volume (0.0 to 1.0). Converts to decibels for MASTER_GAIN.
-     * Safe-guards zero using a tiny epsilon to avoid -Inf dB.
-     */
+    /** Sets volume (0.0 to 1.0). */
     public void setVolume(float volume) {
         this.volume = volume;
-        if (clip != null) {
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float dB = (float) (20.0 * Math.log10(volume <= 0.0 ? 0.0001 : volume));
-            gainControl.setValue(dB);
-        }
+    if (clip != null) clip.setVolume(Math.max(0.0, Math.min(1.0, (double) volume)));
+    }
+
+    /** Returns current logical volume value (0.0 to 1.0). */
+    public float getVolume() {
+        return volume;
     }
 
 }

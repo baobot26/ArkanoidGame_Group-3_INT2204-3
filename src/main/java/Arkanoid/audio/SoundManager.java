@@ -1,5 +1,9 @@
 package Arkanoid.audio;
 
+import javafx.application.Platform;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -8,95 +12,62 @@ public class SoundManager {
     private static SoundManager instance;
     private final Map<String, SoundInterface> sounds = new HashMap<>();
 
-    private SoundManager() {
-    }
+    // Mix levels
+    private float bgVolume = 0.6f;
+    private float ambientVolume = 0.12f;
 
-    /**
-     * Retrieves the singleton instance of SoundManager.
-     *
-     * @return The SoundManager instance.
-     */
+    // Alternating background players
+    private MediaPlayer bgPlayer1;
+    private MediaPlayer bgPlayer2;
+
+    private SoundManager() { }
+
+    /** @return singleton instance. */
     public static SoundManager getInstance() {
-        if (instance == null) {
-            instance = new SoundManager();
-        }
+        if (instance == null) instance = new SoundManager();
         return instance;
     }
 
-    /**
-     * Adds a sound to the sound manager.
-     *
-     * @param name  The name of the sound.
-     * @param sound The sound object implementing SoundInterface.
-     */
-    public void addSound(String name, SoundInterface sound) {
-        sounds.put(name, sound);
-    }
+    // Catalog management
+    /** Register a sound in the catalog. */
+    public void addSound(String name, SoundInterface sound) { sounds.put(name, sound); }
 
-    /**
-     * Plays a sound by its name.
-     *
-     * @param name The name of the sound to play.
-     */
+    /** Play a sound by name; applies short ducking for effects. */
     public void playSound(String name) {
         SoundInterface sound = sounds.get(name);
-        if (sound != null) {
-            sound.play();
-        } else {
+        if (sound == null) {
             System.err.println("Sound not found: " + name);
+            return;
         }
+        // Simple ducking when an effect plays
+        if (name.startsWith("effect_")) {
+            duckBackgroundForMillis(250);
+        }
+        sound.play();
     }
 
-    /**
-     * Stops a sound by its name.
-     *
-     * @param name The name of the sound to stop.
-     */
+    /** Stop a sound by name. */
     public void stopSound(String name) {
         SoundInterface sound = sounds.get(name);
-        if (sound != null) {
-            sound.stop();
-        } else {
-            System.err.println("Sound not found: " + name);
-        }
+        if (sound != null) sound.stop();
     }
 
-    /**
-     * Sets the volume for a specific sound.
-     *
-     * @param name   The name of the sound.
-     * @param volume The volume level (0.0 to 1.0).
-     */
+    /** Set volume for a named sound (0.0-1.0). */
     public void setVolume(String name, float volume) {
         SoundInterface sound = sounds.get(name);
-        if (sound instanceof SoundAbstract) {
-            ((SoundAbstract) sound).setVolume(volume);
-        } else {
-            System.err.println("Sound not found or invalid type: " + name);
-        }
+        if (sound instanceof SoundAbstract) ((SoundAbstract) sound).setVolume(volume);
     }
 
-    /**
-     * Retrieves the set of sound names managed by the SoundManager.
-     *
-     * @return A set of sound names.
-     */
-    public Set<String> getSoundNames() {
-        return sounds.keySet();
-    }
+    /** @return set of available sound names. */
+    public Set<String> getSoundNames() { return sounds.keySet(); }
 
-    /**
-     * Clears all sounds from the sound manager.
-     */
+    /** Stop and clear all registered sounds. */
     public void clearSounds() {
-        for (SoundInterface sound : sounds.values()) {
-            sound.stop();
-        }
+        for (SoundInterface s : sounds.values()) s.stop();
         sounds.clear();
     }
 
-    // Convenience helpers for this game
-
+    // Load defaults from resources and set mix
     public void loadDefaultSounds() {
         // Effects
         addSound("effect_wall", new Effect("/sounds/effects/wall.wav"));
@@ -104,16 +75,112 @@ public class SoundManager {
         addSound("effect_brick", new Effect("/sounds/effects/brick_break.wav"));
         addSound("effect_score", new Effect("/sounds/effects/score.wav"));
 
-        // Musics / ambient
+        // Title and jingles
         addSound("music_title", new Music("/sounds/musics/title.wav", false));
         addSound("music_gameover", new Music("/sounds/musics/gameover.wav", false));
         addSound("music_stage_start", new Music("/sounds/musics/stagestart.wav", false));
-        addSound("ambient_bg", new Ambient("/sounds/musics/title.wav")); // reuse title quietly as ambient
+
+        // Ambient loop (much quieter than background)
+        Ambient ambient = new Ambient("/sounds/ambient/ambient.mp3");
+        if (ambient != null) ambient.setVolume(ambientVolume);
+        addSound("ambient_bg", ambient);
+
+        // Init alternating background players (two tracks)
+        initBackgroundPlayers("/sounds/background/background1.mp3", "/sounds/background/background2.mp3");
+
+        // Default mix
+        setVolume("effect_wall", 1.0f);
+        setVolume("effect_paddle", 1.0f);
+        setVolume("effect_brick", 1.0f);
+        setVolume("effect_score", 1.0f);
+
+        setBackgroundVolume(bgVolume);
+        setVolume("music_title", 0.7f);
+        setVolume("music_gameover", 0.8f);
+        setVolume("music_stage_start", 0.9f);
     }
 
+    /** Stop all sounds and background players. */
     public void stopAll() {
-        for (String name : sounds.keySet()) {
-            stopSound(name);
+        for (String name : sounds.keySet()) stopSound(name);
+        stopBackgroundAlternating();
+    }
+
+    // Alternating background implementation
+    private void initBackgroundPlayers(String res1, String res2) {
+        try {
+            var u1 = SoundManager.class.getResource(res1);
+            var u2 = SoundManager.class.getResource(res2);
+            if (u1 != null) bgPlayer1 = new MediaPlayer(new Media(u1.toExternalForm()));
+            if (u2 != null) bgPlayer2 = new MediaPlayer(new Media(u2.toExternalForm()));
+            if (bgPlayer1 != null && bgPlayer2 != null) {
+                bgPlayer1.setOnEndOfMedia(() -> switchTo(bgPlayer2));
+                bgPlayer2.setOnEndOfMedia(() -> switchTo(bgPlayer1));
+                bgPlayer1.setCycleCount(1);
+                bgPlayer2.setCycleCount(1);
+                bgPlayer1.setVolume(bgVolume);
+                bgPlayer2.setVolume(bgVolume);
+            }
+        } catch (Exception ex) {
+            System.err.println("Failed to init background players: " + ex.getMessage());
+            bgPlayer1 = null; bgPlayer2 = null;
         }
+    }
+
+    private void switchTo(MediaPlayer next) {
+        try {
+            if (next == null) return;
+            next.stop();
+            next.seek(javafx.util.Duration.ZERO);
+            next.setVolume(bgVolume);
+            next.play();
+        } catch (Exception ignored) {}
+    }
+
+    /** Start alternating playback (track1 -> track2 -> track1 …). */
+    public void startBackgroundAlternating() {
+        if (bgPlayer1 == null || bgPlayer2 == null) return;
+        Platform.runLater(() -> {
+            try {
+                bgPlayer1.stop();
+                bgPlayer2.stop();
+                bgPlayer1.seek(javafx.util.Duration.ZERO);
+                bgPlayer1.setVolume(bgVolume);
+                bgPlayer1.play();
+            } catch (Exception ignored) {}
+        });
+    }
+
+    /** Stop alternating playback. */
+    public void stopBackgroundAlternating() {
+        Platform.runLater(() -> {
+            try { if (bgPlayer1 != null) bgPlayer1.stop(); } catch (Exception ignored) {}
+            try { if (bgPlayer2 != null) bgPlayer2.stop(); } catch (Exception ignored) {}
+        });
+    }
+
+    /** Set background volume (0.0-1.0). */
+    public void setBackgroundVolume(float volume) {
+        bgVolume = Math.max(0f, Math.min(1f, volume));
+        Platform.runLater(() -> {
+            try { if (bgPlayer1 != null) bgPlayer1.setVolume(bgVolume); } catch (Exception ignored) {}
+            try { if (bgPlayer2 != null) bgPlayer2.setVolume(bgVolume); } catch (Exception ignored) {}
+        });
+    }
+
+    /** Briefly reduce background/ambient so effects cut through. */
+    private void duckBackgroundForMillis(long ms) {
+        float priorBg = bgVolume;
+        float priorAmb = ambientVolume;
+        float duckedBg = priorBg * 0.6f;
+        float duckedAmb = priorAmb * 0.7f;
+        setBackgroundVolume(duckedBg);
+        setVolume("ambient_bg", duckedAmb);
+        new java.util.Timer(true).schedule(new java.util.TimerTask() {
+            @Override public void run() {
+                setBackgroundVolume(priorBg);
+                setVolume("ambient_bg", priorAmb);
+            }
+        }, ms);
     }
 }

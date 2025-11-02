@@ -5,6 +5,8 @@ import Arkanoid.level.LevelManager;
 import Arkanoid.model.*;
 import Arkanoid.util.Constants;
 import Arkanoid.audio.SoundManager;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.*;
 
 /**
@@ -160,6 +162,10 @@ public class GameManager {
                     scoreManager.loseLife();
                     if (scoreManager.isGameOver()) {
                         currentState = GameState.GAME_OVER;
+                        // Play game over music to completion and stop ambient/effects
+                        Arkanoid.audio.SoundManager sm = Arkanoid.audio.SoundManager.getInstance();
+                        sm.stopAll();
+                        sm.playSound("music_gameover");
                     } else {
                         resetBall();
                     }
@@ -319,6 +325,7 @@ public class GameManager {
     SoundManager sm = SoundManager.getInstance();
     sm.stopAll();
     sm.playSound("music_stage_start");
+    scheduleStageStartStop();
     }
 
     /**
@@ -344,6 +351,7 @@ public class GameManager {
             // Play short stage start jingle on level advance
             SoundManager sm = SoundManager.getInstance();
             sm.playSound("music_stage_start");
+            scheduleStageStartStop();
         } else {
             // Hết level - game hoàn thành
             currentState = GameState.GAME_OVER;
@@ -425,6 +433,24 @@ public class GameManager {
     SoundManager sm = SoundManager.getInstance();
     sm.stopAll();
     sm.playSound("music_title");
+    }
+
+    /**
+     * Ensure stage start jingle plays for exactly 5 seconds, then stop it
+     * and optionally start ambient background.
+     */
+    private void scheduleStageStartStop() {
+        Timer timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                SoundManager sm = SoundManager.getInstance();
+                sm.stopSound("music_stage_start");
+                // Start alternating background and ambient after jingle (ambient is much quieter)
+                sm.startBackgroundAlternating();
+                sm.playSound("ambient_bg");
+            }
+        }, 5000);
     }
 
     // Getters
