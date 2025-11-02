@@ -80,9 +80,10 @@ public class Paddle extends MoveableObject {
     }
 
     public void reset() {
+        //fix: changed order to ensure the width is reset first before calculations
+        width = initialWidth;
         x = Constants.WINDOW_WIDTH / 2.0 - width / 2.0;
         y = Constants.PADDLE_Y;
-        width = initialWidth;
         smoothX = x;
         velocityX = 0;
     }
