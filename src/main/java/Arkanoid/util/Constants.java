@@ -57,6 +57,7 @@ public class Constants {
     public static final Color POWERUP_SPEED_DOWN_COLOR = Color.CYAN;
     public static final Color POWERUP_EXTRA_LIFE_COLOR = Color.PINK;
     public static final Color POWERUP_MULTI_BALL_COLOR = Color.ORANGE;
+    public static final double POWERUP_DURATION = 9000;
 
     // Game settings
     public static final int INITIAL_LIVES = 3;
