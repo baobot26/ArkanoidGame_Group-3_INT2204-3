@@ -4,6 +4,9 @@ import Arkanoid.level.Level;
 import Arkanoid.level.LevelManager;
 import Arkanoid.model.*;
 import Arkanoid.util.Constants;
+import Arkanoid.audio.SoundManager;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.*;
 
 /**
@@ -41,7 +44,9 @@ public class GameManager {
     if (detected <= 0) detected = 3; // fallback
     this.levelManager.loadLevels(detected);
 
-        initializeGame();
+    // Load sounds
+    SoundManager.getInstance().loadDefaultSounds();
+    initializeGame();
     }
 
     private void initializeGame() {
@@ -157,6 +162,10 @@ public class GameManager {
                     scoreManager.loseLife();
                     if (scoreManager.isGameOver()) {
                         currentState = GameState.GAME_OVER;
+                        // Play game over music to completion and stop ambient/effects
+                        Arkanoid.audio.SoundManager sm = Arkanoid.audio.SoundManager.getInstance();
+                        sm.stopAll();
+                        sm.playSound("music_gameover");
                     } else {
                         resetBall();
                     }
@@ -201,6 +210,8 @@ public class GameManager {
             boolean destroyed = hitBrick.hit();
             if (destroyed) {
                 scoreManager.addScore(hitBrick.getScore());
+                Arkanoid.audio.SoundManager.getInstance().playSound("effect_brick");
+                Arkanoid.audio.SoundManager.getInstance().playSound("effect_score");
 
                 if (random.nextInt(100) < 15) {
                     spawnPowerUp(hitBrick.getCenterX(), hitBrick.getCenterY());
@@ -310,6 +321,11 @@ public class GameManager {
         scoreManager.reset();
         levelManager.restartGame(); // Reset về level 1
     initializeGame();
+    // Stage start: play start music for ~5 seconds
+    SoundManager sm = SoundManager.getInstance();
+    sm.stopAll();
+    sm.playSound("music_stage_start");
+    scheduleStageStartStop();
     }
 
     /**
@@ -332,10 +348,18 @@ public class GameManager {
             currentLevel = levelManager.getCurrentLevel();
             resetLevel();
             currentState = GameState.PLAYING;
+            // Play short stage start jingle on level advance
+            SoundManager sm = SoundManager.getInstance();
+            sm.playSound("music_stage_start");
+            scheduleStageStartStop();
         } else {
             // Hết level - game hoàn thành
             currentState = GameState.GAME_OVER;
-            System.out.println("🎉 Congratulations! You completed all levels!");
+            System.out.println("Congratulations! You completed all levels!");
+            // Play title when player wins (until completion)
+            SoundManager sm = SoundManager.getInstance();
+            sm.stopAll();
+            sm.playSound("music_title");
         }
     }
 
@@ -406,6 +430,27 @@ public class GameManager {
      */
     public void showLevelSelection() {
         currentState = GameState.MENU;
+    SoundManager sm = SoundManager.getInstance();
+    sm.stopAll();
+    sm.playSound("music_title");
+    }
+
+    /**
+     * Ensure stage start jingle plays for exactly 5 seconds, then stop it
+     * and optionally start ambient background.
+     */
+    private void scheduleStageStartStop() {
+        Timer timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                SoundManager sm = SoundManager.getInstance();
+                sm.stopSound("music_stage_start");
+                // Start alternating background and ambient after jingle (ambient is much quieter)
+                sm.startBackgroundAlternating();
+                sm.playSound("ambient_bg");
+            }
+        }, 5000);
     }
 
     // Getters

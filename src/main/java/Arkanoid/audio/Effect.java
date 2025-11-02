@@ -1,5 +1,7 @@
 package Arkanoid.audio;
 
+import java.awt.Toolkit;
+
 public class Effect extends SoundAbstract {
     /**
      * Constructor for Effect class.
@@ -16,9 +18,13 @@ public class Effect extends SoundAbstract {
     @Override
     public void play() {
         if (clip != null) {
+            // AudioClip play() already starts from the beginning by default
             clip.stop();
-            clip.setFramePosition(0);
-            clip.start();
+            clip.setCycleCount(1);
+            clip.play();
+        } else {
+            // Fallback: system beep if no valid clip (e.g., zero-byte WAVs)
+            try { Toolkit.getDefaultToolkit().beep(); } catch (Throwable ignored) {}
         }
     }
 

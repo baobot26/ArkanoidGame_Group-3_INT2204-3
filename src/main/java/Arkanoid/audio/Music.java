@@ -1,6 +1,6 @@
 package Arkanoid.audio;
 
-import javax.sound.sampled.Clip;
+import javafx.scene.media.AudioClip;
 
 public class Music extends SoundAbstract {
     private final boolean looping;
@@ -24,8 +24,9 @@ public class Music extends SoundAbstract {
     public void play() {
         if (clip != null) {
             clip.stop();
-            clip.setFramePosition(0);
-            clip.loop(looping ? Clip.LOOP_CONTINUOUSLY : 0);
+            // Loop indefinitely if requested, otherwise play once
+            clip.setCycleCount(looping ? AudioClip.INDEFINITE : 1);
+            clip.play();
         }
     }
 
@@ -34,8 +35,6 @@ public class Music extends SoundAbstract {
      */
     @Override
     public void stop() {
-        if (clip != null) {
-            clip.stop();
-        }
+        if (clip != null) clip.stop();
     }
 }

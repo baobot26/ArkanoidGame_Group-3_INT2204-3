@@ -34,6 +34,7 @@ public class CollisionManager {
             ball.setY(newY);
             // Keep smoothed position in sync if available
             ball.setSmoothY(newY);
+            Arkanoid.audio.SoundManager.getInstance().playSound("effect_paddle");
         }
     }
 
