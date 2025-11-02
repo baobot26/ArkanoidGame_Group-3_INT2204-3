@@ -1,0 +1,18 @@
+{
+  "background": "ice.png",
+  "bricks": [
+    { "type": 1, "x": 100, "y": 40, "width": 75, "height": 20, "color": 6 },
+    { "type": 1, "x": 185, "y": 40, "width": 75, "height": 20, "color": 5 },
+    { "type": 1, "x": 270, "y": 40, "width": 75, "height": 20, "color": 4 },
+    { "type": 1, "x": 355, "y": 40, "width": 75, "height": 20, "color": 3 },
+    { "type": 1, "x": 440, "y": 40, "width": 75, "height": 20, "color": 2 },
+    { "type": 1, "x": 525, "y": 40, "width": 75, "height": 20, "color": 1 },
+    { "type": 1, "x": 610, "y": 40, "width": 75, "height": 20, "color": 0 },
+
+    { "type": 2, "x": 185, "y": 70, "width": 75, "height": 20, "color": 7 },
+    { "type": 2, "x": 270, "y": 70, "width": 75, "height": 20, "color": 7 },
+    { "type": 2, "x": 355, "y": 70, "width": 75, "height": 20, "color": 7 },
+    { "type": 2, "x": 440, "y": 70, "width": 75, "height": 20, "color": 7 },
+    { "type": 2, "x": 525, "y": 70, "width": 75, "height": 20, "color": 7 }
+  ]
+}
