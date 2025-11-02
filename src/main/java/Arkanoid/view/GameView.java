@@ -43,4 +43,11 @@ public class GameView {
     public Scene getScene() {
         return scene;
     }
+
+    /**
+     * Lấy InputHandler để set callback
+     */
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
 }

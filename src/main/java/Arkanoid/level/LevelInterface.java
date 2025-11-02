@@ -1,41 +1,55 @@
 package Arkanoid.level;
 
-import javafx.scene.canvas.GraphicsContext;
+import Arkanoid.model.Brick;
+import java.util.List;
 
+/**
+ * Interface định nghĩa contract cho Level
+ */
 public interface LevelInterface {
     /**
-     * Load level resources and initialize level state.
+     * Khởi tạo level với các brick
      */
-    void load();
+    void initialize();
 
     /**
-     * Start the level
+     * Lấy danh sách tất cả các brick trong level
+     * @return List các brick
      */
-    void start();
+    List<Brick> getBricks();
 
     /**
-     * Update level state.
-     *
-     * @param dt Time delta since last update
+     * Lấy số thứ tự level
+     * @return Level number
      */
-    void update(double dt);
+    int getLevelNumber();
 
     /**
-     * Render level elements.
-     *
-     * @param gc Graphics context
+     * Lấy tên level
+     * @return Tên level
      */
-    void render(GraphicsContext gc);
+    String getLevelName();
 
     /**
-     * Check if the level is completed.
-     *
-     * @return true if completed, false otherwise
+     * Kiểm tra level đã hoàn thành chưa (tất cả brick có thể phá đã bị phá)
+     * @return true nếu level hoàn thành
      */
     boolean isCompleted();
 
     /**
-     * Reset level to initial state.
+     * Reset level về trạng thái ban đầu
      */
     void reset();
+
+    /**
+     * Lấy số brick còn lại (không tính unbreakable)
+     * @return Số brick còn lại
+     */
+    int getRemainingBricks();
+
+    /**
+     * Lấy tổng điểm tối đa có thể đạt được trong level
+     * @return Tổng điểm tối đa
+     */
+    int getMaxScore();
 }
