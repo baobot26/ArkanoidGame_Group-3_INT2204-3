@@ -7,12 +7,18 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.Stop;
 
-public class Ball extends MoveableObject {
+ /**
+  * Player ball with smooth movement and wall collision handling.
+  * Can stick to the paddle before launch and supports speed modifiers via power-ups.
+  */
+ public class Ball extends MoveableObject {
     private final int radius;
     private boolean stuck;
     private Paddle paddle;
     private double smoothX;
     private double smoothY;
+    // Base speed for this ball (can vary per level)
+    private double baseSpeed = Constants.BALL_SPEED;
 
     public Ball(Paddle paddle) {
         super(
@@ -27,14 +33,17 @@ public class Ball extends MoveableObject {
         this.paddle = paddle;
         this.smoothX = x;
         this.smoothY = y;
+    this.baseSpeed = Constants.BALL_SPEED;
     }
 
     @Override
+    /** Updates the ball using a default timestep (1/60s). */
     public void update() {
         update(1.0 / 60.0); // Default for compatibility
     }
 
     @Override
+    /** Updates the ball movement and handles wall collision using delta time (seconds). */
     public void update(double deltaTime) {
         if (stuck) {
             // Ball sticks to paddle
@@ -55,6 +64,7 @@ public class Ball extends MoveableObject {
     }
 
     @Override
+    /** Draws the ball with a radial gradient effect. */
     public void render(GraphicsContext gc) {
         // Create a radial gradient for a 3D effect
         RadialGradient gradient = new RadialGradient(
@@ -67,6 +77,7 @@ public class Ball extends MoveableObject {
         gc.fillOval(x, y, radius * 2, radius * 2);
     }
 
+    /** Handles collisions with window bounds; bounces and clamps position. */
     private void checkWallCollision() {
         // Left and right walls
         if (smoothX <= 0) {
@@ -88,6 +99,9 @@ public class Ball extends MoveableObject {
         y = smoothY;
     }
 
+    /**
+     * Launches the ball from the paddle if currently stuck, with a random upward angle.
+     */
     public void launch() {
         if (stuck) {
             stuck = false;
@@ -98,6 +112,7 @@ public class Ball extends MoveableObject {
         }
     }
 
+    /** Resets the ball to stick on top of the paddle with zero velocity. */
     public void reset() {
         stuck = true;
         x = paddle.getCenterX() - radius;
@@ -108,14 +123,20 @@ public class Ball extends MoveableObject {
         velocityY = 0;
     }
 
+    /** Inverts vertical velocity. */
     public void reverseY() {
         velocityY = -velocityY;
     }
 
+    /** Inverts horizontal velocity. */
     public void reverseX() {
         velocityX = -velocityX;
     }
 
+    /**
+     * Adjusts ball reflection angle based on hit position on the paddle.
+     * @param paddleHitPosition -1 (left edge) to 1 (right edge)
+     */
     public void adjustAngle(double paddleHitPosition) {
         // paddleHitPosition: -1 (left edge) to 1 (right edge)
         double angle = paddleHitPosition * 60; // Max 60 degrees from vertical
@@ -125,19 +146,23 @@ public class Ball extends MoveableObject {
         velocityY = -Math.abs(currentSpeed * Math.cos(Math.toRadians(angle)));
     }
 
+    /** Temporarily increases ball speed (capped at 2x base). */
     public void increaseSpeed() {
-        speed = Math.min(speed * 1.2, Constants.BALL_SPEED * 2);
+    speed = Math.min(speed * 1.2, baseSpeed * 2);
         updateVelocity();
     }
 
+    /** Temporarily decreases ball speed (floored at 0.5x base). */
     public void decreaseSpeed() {
-        speed = Math.max(speed * 0.8, Constants.BALL_SPEED * 0.5);
+    speed = Math.max(speed * 0.8, baseSpeed * 0.5);
         updateVelocity();
     }
+    /** Restores speed to the level-defined baseSpeed. */
     public void resetSpeed() {
-        speed = Constants.BALL_SPEED;
+    speed = baseSpeed;
         updateVelocity();
     }
+    /** Re-normalizes velocity vector to match current speed while preserving direction. */
     private void updateVelocity() {
         double currentSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
         if (currentSpeed > 0) {
@@ -146,35 +171,58 @@ public class Ball extends MoveableObject {
         }
     }
 
+    /** True if the ball has fallen below the bottom of the window. */
     public boolean isOutOfBounds() {
         return y > Constants.WINDOW_HEIGHT;
     }
 
+    /** True if the ball is currently stuck to the paddle. */
     public boolean isStuck() {
         return stuck;
     }
 
+    /** Returns the ball radius in pixels. */
     public int getRadius() {
         return radius;
     }
 
+    /** Sets whether the ball is stuck to the paddle. */
     public void setStuck(boolean stuck) {
         this.stuck = stuck;
     }
 
+    /** Returns the smoothed X used for sub-frame integration. */
     public double getSmoothX() {
         return smoothX;
     }
 
+    /** Returns the smoothed Y used for sub-frame integration. */
     public double getSmoothY() {
         return smoothY;
     }
 
+    /** Sets the smoothed X used for sub-frame integration. */
     public void setSmoothX(double smoothX) {
         this.smoothX = smoothX;
     }
 
+    /** Sets the smoothed Y used for sub-frame integration. */
     public void setSmoothY(double smoothY) {
         this.smoothY = smoothY;
+    }
+
+    /**
+     * Set the base speed for this ball (e.g., from level config) and apply it.
+     */
+    /** Sets the level-defined base speed and applies it to current velocity. */
+    public void setBaseSpeed(double baseSpeed) {
+        this.baseSpeed = baseSpeed;
+        this.speed = baseSpeed;
+        updateVelocity();
+    }
+
+    /** Returns the level-defined base speed. */
+    public double getBaseSpeed() {
+        return baseSpeed;
     }
 }

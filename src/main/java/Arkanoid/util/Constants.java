@@ -2,6 +2,9 @@ package Arkanoid.util;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Central place for gameplay constants, colors, dimensions and scores.
+ */
 public class Constants {
     // Comparison epsilon
     public static final double EPSILON = 1e-6;

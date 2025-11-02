@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manager để quản lý progression giữa các level
+ * Manages level progression and selection.
+ * Holds a list of loaded Level instances, tracks the current index,
+ * and provides navigation (next/previous/select) as well as unlock logic.
  */
 public class LevelManager {
     private List<Level> levels;
@@ -15,12 +17,11 @@ public class LevelManager {
     public LevelManager() {
         this.levels = new ArrayList<>();
         this.currentLevelIndex = 0;
-        this.highestUnlockedLevel = Integer.MAX_VALUE; // Unlock tất cả levels
+        this.highestUnlockedLevel = Integer.MAX_VALUE; // Unlock all levels by default
     }
 
     /**
-     * Load tất cả levels từ file
-     * @param maxLevels Số level tối đa
+     * Loads up to maxLevels from LevelLoader and initializes each level.
      */
     public void loadLevels(int maxLevels) {
         levels.clear();
@@ -34,7 +35,7 @@ public class LevelManager {
                 level.initialize();
                 levels.add(level);
             } else {
-                // Nếu không load được, tạo level mặc định
+                // If loading fails, create a default sample level
                 System.out.println("Creating default level " + i);
                 LevelData defaultData = LevelLoader.createSampleLevel(i, "Level " + i);
                 Level level = new Level(defaultData);
@@ -46,35 +47,31 @@ public class LevelManager {
         System.out.println("Loaded " + levels.size() + " levels");
     }
 
-    /**
-     * Lấy level hiện tại
-     */
+    /** Returns the currently selected Level or null if none. */
     public Level getCurrentLevel() {
         if (levels.isEmpty()) return null;
         return levels.get(currentLevelIndex);
     }
 
-    /**
-     * Chuyển sang level tiếp theo
-     * @return true nếu còn level tiếp theo
+    /** Advances to next level if available.
+     * @return true if moved to next level
      */
     public boolean nextLevel() {
         if (currentLevelIndex < levels.size() - 1) {
             currentLevelIndex++;
 
-            // Unlock level mới nếu chưa unlock
+            // Unlock newly reached level if needed
             if (currentLevelIndex + 1 > highestUnlockedLevel) {
                 highestUnlockedLevel = currentLevelIndex + 1;
             }
 
             return true;
         }
-        return false; // Hết level
+    return false; // No more levels
     }
 
-    /**
-     * Quay lại level trước
-     * @return true nếu thành công
+    /** Moves back to previous level if possible.
+     * @return true if moved to previous level
      */
     public boolean previousLevel() {
         if (currentLevelIndex > 0) {
@@ -84,10 +81,9 @@ public class LevelManager {
         return false;
     }
 
-    /**
-     * Chọn level cụ thể (nếu đã unlock)
-     * @param levelNumber Level number (1-based)
-     * @return true nếu thành công
+    /** Selects a specific level if it exists and is unlocked.
+     * @param levelNumber 1-based index
+     * @return true if selection succeeded
      */
     public boolean selectLevel(int levelNumber) {
         int index = levelNumber - 1;
@@ -99,18 +95,14 @@ public class LevelManager {
         return false;
     }
 
-    /**
-     * Reset level hiện tại
-     */
+    /** Re-initializes the current level to its initial state. */
     public void resetCurrentLevel() {
         if (getCurrentLevel() != null) {
             getCurrentLevel().reset();
         }
     }
 
-    /**
-     * Restart từ level 1
-     */
+    /** Resets progression to level 1 and resets all levels. */
     public void restartGame() {
         currentLevelIndex = 0;
         for (Level level : levels) {
@@ -118,67 +110,49 @@ public class LevelManager {
         }
     }
 
-    /**
-     * Kiểm tra đã hoàn thành tất cả level chưa
-     */
+    /** @return true if the last level is selected and completed. */
     public boolean isGameComplete() {
         return currentLevelIndex >= levels.size() - 1 &&
                 getCurrentLevel() != null &&
                 getCurrentLevel().isCompleted();
     }
 
-    /**
-     * Lấy số level hiện tại (1-based)
-     */
+    /** @return current level number (1-based). */
     public int getCurrentLevelNumber() {
         return currentLevelIndex + 1;
     }
 
-    /**
-     * Lấy tổng số level
-     */
+    /** @return total number of loaded levels. */
     public int getTotalLevels() {
         return levels.size();
     }
 
-    /**
-     * Lấy level cao nhất đã unlock
-     */
+    /** @return highest unlocked level number. */
     public int getHighestUnlockedLevel() {
         return highestUnlockedLevel;
     }
 
-    /**
-     * Set level cao nhất đã unlock (dùng cho save/load game)
-     */
+    /** Sets the highest unlocked level, clamped to total levels. */
     public void setHighestUnlockedLevel(int level) {
         this.highestUnlockedLevel = Math.min(level, totalLevels);
     }
 
-    /**
-     * Kiểm tra level có unlock không
-     */
+    /** @return true if the given 1-based level is unlocked. */
     public boolean isLevelUnlocked(int levelNumber) {
         return levelNumber <= highestUnlockedLevel;
     }
 
-    /**
-     * Unlock tất cả levels (cheat mode hoặc debug)
-     */
+    /** Unlocks all levels. */
     public void unlockAllLevels() {
         highestUnlockedLevel = totalLevels;
     }
 
-    /**
-     * Lấy danh sách tất cả levels
-     */
+    /** @return a copy of the internal level list. */
     public List<Level> getAllLevels() {
         return new ArrayList<>(levels);
     }
 
-    /**
-     * Lấy progress (phần trăm hoàn thành)
-     */
+    /** @return overall progress percentage across levels. */
     public double getProgress() {
         if (totalLevels == 0) return 0.0;
         return (double) (currentLevelIndex + 1) / totalLevels * 100.0;

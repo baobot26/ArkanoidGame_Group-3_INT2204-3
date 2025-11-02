@@ -4,52 +4,30 @@ import Arkanoid.model.Brick;
 import java.util.List;
 
 /**
- * Interface định nghĩa contract cho Level
+ * Minimal contract for a playable level: identity, brick set, lifecycle, and completion.
  */
 public interface LevelInterface {
-    /**
-     * Khởi tạo level với các brick
-     */
+    /** Initializes the level with its bricks. */
     void initialize();
 
-    /**
-     * Lấy danh sách tất cả các brick trong level
-     * @return List các brick
-     */
+    /** @return the list of bricks in this level. */
     List<Brick> getBricks();
 
-    /**
-     * Lấy số thứ tự level
-     * @return Level number
-     */
+    /** @return the 1-based level number. */
     int getLevelNumber();
 
-    /**
-     * Lấy tên level
-     * @return Tên level
-     */
+    /** @return the level name. */
     String getLevelName();
 
-    /**
-     * Kiểm tra level đã hoàn thành chưa (tất cả brick có thể phá đã bị phá)
-     * @return true nếu level hoàn thành
-     */
+    /** @return true if all breakable bricks are destroyed. */
     boolean isCompleted();
 
-    /**
-     * Reset level về trạng thái ban đầu
-     */
+    /** Resets the level to its initial state. */
     void reset();
 
-    /**
-     * Lấy số brick còn lại (không tính unbreakable)
-     * @return Số brick còn lại
-     */
+    /** @return remaining breakable bricks (excludes unbreakable). */
     int getRemainingBricks();
 
-    /**
-     * Lấy tổng điểm tối đa có thể đạt được trong level
-     * @return Tổng điểm tối đa
-     */
+    /** @return maximum attainable score in this level. */
     int getMaxScore();
 }

@@ -13,7 +13,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
- * UI View để chọn level
+ * Simple JavaFX UI for selecting a level to play.
+ * Shows a grid of buttons for each available level and a back button to return to the menu.
+ * Uses a callback interface to notify the host when a level is chosen.
  */
 public class LevelSelectionView {
     private final Stage stage;
@@ -29,9 +31,7 @@ public class LevelSelectionView {
     // ✅ Giữ Scene để có thể quay lại dễ dàng
     private Scene scene;
 
-    /**
-     * Interface callback khi chọn level
-     */
+    /** Callback interface for level selection UI actions. */
     public interface LevelSelectionCallback {
         void onLevelSelected(int levelNumber);
         void onBack();
@@ -43,9 +43,7 @@ public class LevelSelectionView {
         initializeUI();
     }
 
-    /**
-     * Khởi tạo UI
-     */
+    /** Initializes the selection UI components and scene. */
     private void initializeUI() {
         mainContainer = new VBox(20);
         mainContainer.setAlignment(Pos.TOP_CENTER);
@@ -79,15 +77,15 @@ public class LevelSelectionView {
 
         mainContainer.getChildren().addAll(titleLabel, levelGrid, backButton);
 
-        // ✅ tạo scene ngay khi khởi tạo
+    // Create scene on init
         scene = new Scene(mainContainer, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 
-        // ✅ xử lý phím ESC để quay về MENU luôn tại đây
+    // Handle ESC to go back to menu
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case ESCAPE:
                     if (callback != null) {
-                        callback.onBack(); // quay về menu khi bấm ESC
+            callback.onBack();
                     }
                     break;
                 default:
@@ -96,14 +94,12 @@ public class LevelSelectionView {
         });
     }
 
-    /**
-     * Tạo các button cho từng level
-     */
+    /** Creates level buttons based on the number of loaded levels. */
     private void createLevelButtons() {
         levelGrid.getChildren().clear();
 
         int totalLevels = levelManager.getTotalLevels();
-        int cols = 5; // 5 level mỗi hàng
+    int cols = 5; // 5 levels per row
 
         for (int i = 1; i <= totalLevels; i++) {
             Button levelButton = createLevelButton(i);
@@ -137,7 +133,7 @@ public class LevelSelectionView {
             button.setDisable(true);
         }
 
-        return button;
+    return button;
     }
 
     private void styleButton(Button button, String color) {
@@ -174,30 +170,29 @@ public class LevelSelectionView {
         });
     }
 
-    /**
-     * Hiển thị level selection screen
-     */
+    /** Shows the level selection screen on the provided Stage. */
     public void show() {
         createLevelButtons(); // Refresh buttons
         stage.setScene(scene);
         stage.setTitle("Arkanoid - Level Selection");
     }
 
-    /**
-     * ✅ Lấy Scene cho nơi khác dùng (ví dụ Main hoặc InputHandler)
-     */
+    /** @return the JavaFX Scene instance used by this view. */
     public Scene getScene() {
         return scene;
     }
 
+    /** Rebuilds the level grid (e.g., after unlocking). */
     public void refresh() {
         createLevelButtons();
     }
 
+    /** Sets the callback invoked when selecting a level or going back. */
     public void setCallback(LevelSelectionCallback callback) {
         this.callback = callback;
     }
 
+    /** @return the root container for embedders or styling. */
     public VBox getMainContainer() {
         return mainContainer;
     }

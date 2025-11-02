@@ -4,6 +4,9 @@ import Arkanoid.util.Constants;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * Player-controlled paddle. Supports smooth acceleration and dynamic width via power-ups.
+ */
 public class Paddle extends MoveableObject {
     private final double initialWidth;
     private boolean movingLeft;
@@ -24,11 +27,18 @@ public class Paddle extends MoveableObject {
         this.smoothX = x;
     }
 
+    /**
+     * Updates the paddle with a default timestep of 1/60s.
+     */
     @Override
     public void update() {
         update(1.0 / 60.0); // Default for compatibility
     }
 
+    /**
+     * Updates paddle position using smooth acceleration and clamps within bounds.
+     * @param deltaTime seconds elapsed since last update
+     */
     @Override
     public void update(double deltaTime) {
         // Calculate target velocity
@@ -61,6 +71,9 @@ public class Paddle extends MoveableObject {
         x = smoothX;
     }
 
+    /**
+     * Renders the paddle with a subtle highlight for depth.
+     */
     @Override
     public void render(GraphicsContext gc) {
         gc.setFill(Constants.PADDLE_COLOR);
@@ -71,18 +84,22 @@ public class Paddle extends MoveableObject {
         gc.fillRoundRect(x, y, width, height / 2, 5, 5);
     }
 
+    /** Increases paddle width up to 40% of window width. */
     public void expand() {
         width = Math.min(width * 1.5, Constants.WINDOW_WIDTH * 0.4);
     }
 
+    /** Decreases paddle width, not less than half of the initial width. */
     public void shrink() {
         width = Math.max(width * 0.7, initialWidth * 0.5);
     }
 
+    /** Restores paddle width to its initial value. */
     public void resetSize() {
         width = initialWidth;
     }
 
+    /** Resets position, width and velocity to starting values. */
     public void reset() {
         //fix: changed order to ensure the width is reset first before calculations
         width = initialWidth;
@@ -93,10 +110,12 @@ public class Paddle extends MoveableObject {
     }
 
     // Getters and setters
+    /** Starts/stops moving left when held/released. */
     public void setMovingLeft(boolean movingLeft) {
         this.movingLeft = movingLeft;
     }
 
+    /** Starts/stops moving right when held/released. */
     public void setMovingRight(boolean movingRight) {
         this.movingRight = movingRight;
     }

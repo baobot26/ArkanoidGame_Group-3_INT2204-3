@@ -8,20 +8,32 @@ public class AudioSetting {
     private float effectVolume = 1.0f;
     private boolean mute = false;
 
+    /**
+     * @return the effective master volume (0.0-1.0), returns 0.0 if muted.
+     */
     public float getMasterVolume() {
         // If muted, return 0.0 regardless of masterVolume
         return mute ? 0.0f : masterVolume;
     }
 
+    /**
+     * Sets the master volume, clamped to 0.0-1.0.
+     */
     public void setMasterVolume(float volume) {
         // Clamp volume between 0.0 and 1.0
         this.masterVolume = Math.max(0.0f, Math.min(1.0f, volume));
     }
 
+    /**
+     * @return true if audio is muted.
+     */
     public boolean isMute() {
         return mute;
     }
 
+    /**
+     * Enables or disables mute.
+     */
     public void setMute(boolean mute) {
         this.mute = mute;
     }

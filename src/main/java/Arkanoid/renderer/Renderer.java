@@ -10,13 +10,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Renders the entire game based on the current {@link Arkanoid.model.GameState}.
+ * Draws playfield entities (bricks, power-ups, paddle, balls) and HUD/overlays.
+ */
 public class Renderer {
     private GraphicsContext gc;
 
+    /**
+     * Creates a renderer that draws to the given GraphicsContext.
+     */
     public Renderer(GraphicsContext gc) {
         this.gc = gc;
     }
 
+    /**
+     * Renders the entire frame based on the current GameState.
+     * Draws world entities and overlays (menu/pause/game over/level complete).
+     */
     public void render(GameManager gameManager) {
         // Clear screen
         gc.setFill(Constants.BACKGROUND_COLOR);

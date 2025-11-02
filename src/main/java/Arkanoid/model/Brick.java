@@ -3,6 +3,10 @@ package Arkanoid.model;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+/**
+ * A single brick in the playfield with type-specific behavior.
+ * Hard bricks require multiple hits; unbreakable bricks cannot be destroyed.
+ */
 public class Brick extends GameObject {
     private BrickType type;
     private int hitsRemaining;
@@ -17,11 +21,13 @@ public class Brick extends GameObject {
         this.destroyed = false;
     }
     
+    /** Bricks are static; no-op update. */
     @Override
     public void update() {
         // Bricks don't move
     }
     
+    /** Bricks are static; no-op update. */
     @Override
     public void update(double deltaTime) {
         // Bricks don't move
@@ -60,6 +66,10 @@ public class Brick extends GameObject {
         }
     }
     
+    /**
+     * Applies a hit to this brick.
+     * @return true if the brick was destroyed by this hit
+     */
     public boolean hit() {
         if (type == BrickType.UNBREAKABLE) {
             return false;
@@ -80,14 +90,17 @@ public class Brick extends GameObject {
         return false;
     }
     
+    /** @return true if this brick has been destroyed. */
     public boolean isDestroyed() {
         return destroyed;
     }
     
+    /** @return the brick type controlling durability and score. */
     public BrickType getType() {
         return type;
     }
     
+    /** @return score awarded when this brick is destroyed. */
     public int getScore() {
         switch (type) {
             case HARD:

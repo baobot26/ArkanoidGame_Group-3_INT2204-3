@@ -3,7 +3,9 @@ package Arkanoid.level;
 import java.util.List;
 
 /**
- * Data class chứa thông tin cấu hình level từ JSON
+ * Plain data object describing a level configuration loaded from JSON.
+ * Contains metadata (number, name), optional per-level parameters (ball speed, lives),
+ * and a list of brick descriptors that the game converts into concrete bricks.
  */
 public class LevelData {
     private int levelNumber;
@@ -68,13 +70,13 @@ public class LevelData {
     }
 
     /**
-     * Inner class chứa thông tin của từng brick
+     * Inner class describing a single brick cell in the level grid.
      */
     public static class BrickData {
         private int row;
         private int col;
         private String type; // "NORMAL", "HARD", "UNBREAKABLE"
-        private String color; // Hex color như "#FF0000"
+        private String color; // Hex color like "#FF0000"
 
         // Constructor
         public BrickData() {}

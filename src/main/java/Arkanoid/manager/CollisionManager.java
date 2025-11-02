@@ -8,8 +8,17 @@ import Arkanoid.model.PowerUps;
 import java.util.List;
 
 
+/**
+ * Detects and resolves collisions between the ball, paddle and bricks.
+ * Updates ball directions and applies brick hit logic.
+ */
 public class CollisionManager {
+    private static final double EPSILON = 0.1; // small offset to avoid re-colliding next frame
 
+    /**
+     * Resolves ball/paddle collision: bounce upward, adjust outgoing angle based on hit position,
+     * and place the ball just above the paddle to prevent sticking.
+     */
     public void checkBallPaddleCollision(Ball ball, Paddle paddle) {
         if (ball.intersects(paddle) && ball.getVelocityY() > 0) {
             ball.reverseY();
@@ -21,35 +30,59 @@ public class CollisionManager {
             ball.adjustAngle(hitPosition);
 
             // Move ball above paddle to prevent sticking
-            ball.setY(paddle.getY() - ball.getHeight());
+            double newY = paddle.getY() - ball.getHeight() - EPSILON;
+            ball.setY(newY);
+            // Keep smoothed position in sync if available
+            ball.setSmoothY(newY);
         }
     }
 
+    /**
+     * Resolves the first brick collision encountered this tick using AABB overlap.
+     * Chooses the axis with smaller penetration to resolve and flips the corresponding velocity.
+     * Returns the brick hit so callers can apply damage/score logic.
+     */
     public Brick checkBallBrickCollision(Ball ball, List<Brick> bricks) {
         for (Brick brick : bricks) {
             if (!brick.isDestroyed() && ball.intersects(brick)) {
-                // Determine collision side
-                double ballCenterX = ball.getCenterX();
-                double ballCenterY = ball.getCenterY();
-                double brickCenterX = brick.getCenterX();
-                double brickCenterY = brick.getCenterY();
+                // Compute centers and overlaps
+                double dx = ball.getCenterX() - brick.getCenterX();
+                double dy = ball.getCenterY() - brick.getCenterY();
 
-                double dx = ballCenterX - brickCenterX;
-                double dy = ballCenterY - brickCenterY;
+                double halfW = (ball.getWidth() / 2.0) + (brick.getWidth() / 2.0);
+                double halfH = (ball.getHeight() / 2.0) + (brick.getHeight() / 2.0);
 
-                double width = (ball.getWidth() + brick.getWidth()) / 2;
-                double height = (ball.getHeight() + brick.getHeight()) / 2;
+                double overlapX = halfW - Math.abs(dx);
+                double overlapY = halfH - Math.abs(dy);
 
-                double crossWidth = width * dy;
-                double crossHeight = height * dx;
-
-                // Determine collision side and bounce
-                if (Math.abs(crossWidth) > Math.abs(crossHeight)) {
-                    // Collision from top or bottom
-                    ball.reverseY();
-                } else {
-                    // Collision from left or right
+                if (overlapX < overlapY) {
+                    // Resolve horizontally (left/right)
+                    if (dx > 0) {
+                        // Ball is to the right of brick -> push to the right side
+                        double newX = brick.getX() + brick.getWidth() + EPSILON;
+                        ball.setX(newX);
+                        ball.setSmoothX(newX);
+                    } else {
+                        // Ball is to the left of brick -> push to the left side
+                        double newX = brick.getX() - ball.getWidth() - EPSILON;
+                        ball.setX(newX);
+                        ball.setSmoothX(newX);
+                    }
                     ball.reverseX();
+                } else {
+                    // Resolve vertically (top/bottom)
+                    if (dy > 0) {
+                        // Ball is below brick -> push below
+                        double newY = brick.getY() + brick.getHeight() + EPSILON;
+                        ball.setY(newY);
+                        ball.setSmoothY(newY);
+                    } else {
+                        // Ball is above brick -> push above
+                        double newY = brick.getY() - ball.getHeight() - EPSILON;
+                        ball.setY(newY);
+                        ball.setSmoothY(newY);
+                    }
+                    ball.reverseY();
                 }
 
                 return brick;

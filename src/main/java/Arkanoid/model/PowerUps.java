@@ -5,6 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Falling power-up pickup with a short label per type.
+ * Applies effects when collected by the paddle and tracks remaining duration for timed effects.
+ */
 public class PowerUps extends MoveableObject {
     private PowerUpType type;
     private boolean collected;
@@ -17,11 +21,13 @@ public class PowerUps extends MoveableObject {
         this.timeleft = Constants.POWERUP_DURATION;
     }
 
+    /** Updates falling motion at default tick rate. */
     @Override
     public void update() {
         move();
     }
 
+    /** Updates falling motion and counts down remaining time when collected. */
     @Override
     public void update(double deltaTime) {
         move(deltaTime);
@@ -88,22 +94,27 @@ public class PowerUps extends MoveableObject {
         }
     }
 
+    /** @return true if the power-up has fallen below the bottom of the screen. */
     public boolean isOutOfBounds() {
         return y > Constants.WINDOW_HEIGHT;
     }
 
+    /** Marks this power-up as collected by the paddle. */
     public void collect() {
         collected = true;
     }
 
+    /** @return true if the power-up has been collected. */
     public boolean isCollected() {
         return collected;
     }
 
+    /** @return true if a collected, timed power-up has fully expired. */
     public boolean isExpired() {
         return isCollected() && timeleft <= 0;
     }
 
+    /** @return the type of this power-up. */
     public PowerUpType getType() {
         return type;
     }

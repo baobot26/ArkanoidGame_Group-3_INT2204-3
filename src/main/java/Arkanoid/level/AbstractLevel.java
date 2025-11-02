@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract base class cho tất cả các level
+ * Abstract base for all level implementations.
+ * Stores common state (number, name, brick lists) and provides reset/score helpers.
  */
 public abstract class AbstractLevel implements LevelInterface {
     protected int levelNumber;
     protected String levelName;
     protected List<Brick> bricks;
-    protected List<Brick> initialBricks; // Backup để reset
+    protected List<Brick> initialBricks; // Backup for reset
 
     public AbstractLevel(int levelNumber, String levelName) {
         this.levelNumber = levelNumber;
@@ -47,7 +48,7 @@ public abstract class AbstractLevel implements LevelInterface {
     @Override
     public void reset() {
         bricks.clear();
-        // Deep copy từ initialBricks
+    // Deep copy from initialBricks
         for (Brick brick : initialBricks) {
             bricks.add(copyBrick(brick));
         }
@@ -76,17 +77,17 @@ public abstract class AbstractLevel implements LevelInterface {
     }
 
     /**
-     * Helper method để backup initial state
+     * Helper to backup initial state.
      */
     protected void backupInitialState() {
         initialBricks.clear();
         for (Brick brick : bricks) {
-            initialBricks.add(brick); // Chỉ reference, không copy
+            initialBricks.add(brick); // Store references; deep copy happens in reset
         }
     }
 
     /**
-     * Deep copy một brick
+     * Deep copy a brick instance.
      */
     private Brick copyBrick(Brick original) {
         return new Brick(
@@ -100,10 +101,10 @@ public abstract class AbstractLevel implements LevelInterface {
     }
 
     /**
-     * Parse color từ brick (placeholder - có thể cải thiện)
+     * Derives a color for the copied brick based on its type (placeholder logic).
      */
     private javafx.scene.paint.Color parseBrickColor(Brick brick) {
-        // Lấy color từ Constants dựa trên type
+        // Fallback color selection by type
         switch (brick.getType()) {
             case HARD:
                 return javafx.scene.paint.Color.DARKRED;

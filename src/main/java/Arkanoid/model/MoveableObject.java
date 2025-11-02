@@ -1,5 +1,8 @@
 package Arkanoid.model;
 
+/**
+ * Extends GameObject with velocity and a nominal speed; provides movement helpers.
+ */
 public abstract class MoveableObject extends GameObject {
     protected double velocityX;
     protected double velocityY;
