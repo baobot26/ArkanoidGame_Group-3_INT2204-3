@@ -1,4 +1,4 @@
-package Arkanoid;
+package Arkanoid.model;
 
 import Arkanoid.util.Constants;
 import javafx.scene.canvas.GraphicsContext;

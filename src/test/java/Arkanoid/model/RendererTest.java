@@ -1,4 +1,4 @@
-package Arkanoid;
+package Arkanoid.model;
 
 import Arkanoid.manager.GameManager;
 import Arkanoid.model.GameState;
