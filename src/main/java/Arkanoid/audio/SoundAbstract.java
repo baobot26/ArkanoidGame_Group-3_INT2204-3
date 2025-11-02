@@ -1,26 +1,31 @@
 package Arkanoid.audio;
 
 import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public abstract class SoundAbstract implements SoundInterface{
     protected float volume = 1.0f;
     protected Clip clip;
     /**
-     * Loads an audio clip from a filesystem path.
-     * Expects a PCM compatible WAV. Stores the opened Clip in {@code clip}.
-     * @param soundPath absolute or relative file path to the sound asset
-     * @throws RuntimeException if the file can't be read or audio system is unavailable
+     * Loads an audio clip from classpath (preferred) or filesystem path.
+     * Pass resource path starting with '/' for classpath (e.g. "/sounds/effects/wall.wav").
      */
     public void load(String soundPath) {
         try {
-            AudioInputStream audio = AudioSystem.getAudioInputStream(new File(soundPath));
+            AudioInputStream audio;
+            InputStream is = null;
+            if (soundPath != null && soundPath.startsWith("/")) {
+                is = SoundAbstract.class.getResourceAsStream(soundPath);
+            }
+            if (is != null) {
+                audio = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
+            } else {
+                audio = AudioSystem.getAudioInputStream(new File(soundPath));
+            }
             clip = AudioSystem.getClip();
             clip.open(audio);
-            System.out.println("Loaded sound: " + soundPath);
-        } catch (UnsupportedAudioFileException | IOException |
-                 LineUnavailableException e) {
+            System.out.println("Loaded sound: " + soundPath + (is != null ? " [classpath]" : " [file]"));
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             throw new RuntimeException(e);
         }
     }
