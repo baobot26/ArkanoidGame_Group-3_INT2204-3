@@ -72,4 +72,15 @@ public class Constants {
     public static final int UI_FONT_SIZE = 20;
     public static final Color UI_TEXT_COLOR = Color.WHITE;
     public static final Color BACKGROUND_COLOR = Color.BLACK;
+
+    // Soundtrack
+
+    public static final String SOUND_TITLE = "Resources/Soundtrack/title.wav";
+    public static final String SOUND_STAGE_START = "Resources/Soundtrack/stagestart.wav";
+    public static final String SOUND_PADDLE_HIT = "Resources/Soundtrack/paddle.wav";
+    public static final String SOUND_WALL_HIT = "Resources/Soundtrack/wall.wav";
+    public static final String SOUND_SCORE = "Resources/Soundtrack/score.wav";
+    public static final String SOUND_GAME_OVER = "Resources/Soundtrack/gameover.wav";
+    public static final String SOUND_BRICK_BREAK = "Resources/Soundtrack/brick_break.wav";
+
 }

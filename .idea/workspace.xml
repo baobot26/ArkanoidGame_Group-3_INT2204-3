@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a702c1d6-71ac-4f24-b02d-8f0ce0610828" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/Arkanoid/PowerUpsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Arkanoid/RendererTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="a702c1d6-71ac-4f24-b02d-8f0ce0610828" name="Changes" comment="feat: add junit test for powerUps and Renderrer&#10;fix: fixing the PowerUps class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/GameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/GameManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/util/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Arkanoid/PowerUpsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Arkanoid/PowerUpsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/Arkanoid/RendererTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Arkanoid/RendererTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,21 +27,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "sasasasaascas"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;sasasasaascas&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/armordkay/ArkanoidGame_Group-3_INT2204-3.git",
-    "accountId": "66e2f4b2-4666-4882-8283-2b01bd64e3a0"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/armordkay/ArkanoidGame_Group-3_INT2204-3.git&quot;,
+    &quot;accountId&quot;: &quot;66e2f4b2-4666-4882-8283-2b01bd64e3a0&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="34p1ZRkQTMSsrsPN1Mtu1OytG5f" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -52,6 +52,9 @@
     "Application.Main (1).executor": "Run",
     "Application.Main.executor": "Run",
     "Application.Unnamed.executor": "Run",
+    "JUnit.BallTest.executor": "Run",
+    "JUnit.PowerUpsTest.executor": "Run",
+    "JUnit.RendererTest.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -63,7 +66,20 @@
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.PowerUpsTest">
+    <configuration name="Main (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Arkanoid.Main" />
+      <module name="Game" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Arkanoid.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -87,8 +103,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PowerUpsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Game" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Arkanoid.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Arkanoid" />
+      <option name="MAIN_CLASS_NAME" value="Arkanoid.PowerUpsTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.PowerUpsTest" />
+        <item itemvalue="Application.Main (1)" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -101,7 +134,20 @@
       <option name="presentableId" value="Default" />
       <updated>1761895755907</updated>
     </task>
+    <task id="LOCAL-00001" summary="feat: add junit test for powerUps and Renderrer&#10;fix: fixing the PowerUps class">
+      <option name="closed" value="true" />
+      <created>1762015165477</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1762015165477</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: add junit test for powerUps and Renderrer&#10;fix: fixing the PowerUps class" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add junit test for powerUps and Renderrer&#10;fix: fixing the PowerUps class" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/game$Main.ic" NAME="Main Coverage Results" MODIFIED="1761896860773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
