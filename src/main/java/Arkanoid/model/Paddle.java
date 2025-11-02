@@ -79,6 +79,10 @@ public class Paddle extends MoveableObject {
         width = Math.max(width * 0.7, initialWidth * 0.5);
     }
 
+    public void resetSize() {
+        width = initialWidth;
+    }
+
     public void reset() {
         //fix: changed order to ensure the width is reset first before calculations
         width = initialWidth;

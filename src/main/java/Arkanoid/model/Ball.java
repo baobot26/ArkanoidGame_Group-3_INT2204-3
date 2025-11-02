@@ -134,7 +134,10 @@ public class Ball extends MoveableObject {
         speed = Math.max(speed * 0.8, Constants.BALL_SPEED * 0.5);
         updateVelocity();
     }
-
+    public void resetSpeed() {
+        speed = Constants.BALL_SPEED;
+        updateVelocity();
+    }
     private void updateVelocity() {
         double currentSpeed = Math.sqrt(velocityX * velocityX + velocityY * velocityY);
         if (currentSpeed > 0) {
