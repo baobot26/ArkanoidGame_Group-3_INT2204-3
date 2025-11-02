@@ -1,5 +1,7 @@
 package Arkanoid.manager;
 
+import Arkanoid.level.Level;
+import Arkanoid.level.LevelManager;
 import Arkanoid.model.*;
 import Arkanoid.util.Constants;
 import java.util.*;
@@ -14,6 +16,10 @@ public class GameManager {
     private ScoreManager scoreManager;
     private Random random;
 
+    // Level Management
+    private LevelManager levelManager;
+    private Level currentLevel;
+
     // Quản lý thời gian hiệu lực của PowerUps
     private Map<PowerUpType, Double> activePowerUps;
 
@@ -23,6 +29,10 @@ public class GameManager {
         this.scoreManager = new ScoreManager();
         this.random = new Random();
         this.activePowerUps = new HashMap<>();
+
+        // Initialize Level Manager
+        this.levelManager = new LevelManager();
+        this.levelManager.loadLevels(3); // Load 3 levels
 
         initializeGame();
     }
@@ -34,10 +44,45 @@ public class GameManager {
         bricks = new ArrayList<>();
         powerUps = new ArrayList<>();
 
-        createLevel();
+        loadCurrentLevel();
     }
 
-    private void createLevel() {
+    /**
+     * Load level hiện tại từ LevelManager
+     */
+    private void loadCurrentLevel() {
+        currentLevel = levelManager.getCurrentLevel();
+
+        if (currentLevel != null) {
+            System.out.println("🎮 Loading level: " + currentLevel.getLevelName() +
+                    " (Level " + currentLevel.getLevelNumber() + ")");
+
+            // Initialize level (không reset để tránh double init)
+            // Level đã được initialize trong LevelManager.loadLevels()
+
+            // Load bricks từ level
+            bricks.clear();
+            bricks.addAll(currentLevel.getBricks());
+
+            System.out.println("   ✅ Loaded " + bricks.size() + " bricks from level data");
+
+            // Debug: In ra vài brick đầu tiên
+            for (int i = 0; i < Math.min(3, bricks.size()); i++) {
+                Brick b = bricks.get(i);
+                System.out.println("   Brick " + i + ": type=" + b.getType() +
+                        ", pos=(" + b.getX() + "," + b.getY() + ")");
+            }
+        } else {
+            System.out.println("⚠️ Current level is NULL! Using legacy level generation");
+            // Fallback: tạo level cũ nếu không load được
+            createLegacyLevel();
+        }
+    }
+
+    /**
+     * Tạo level theo cách cũ (fallback)
+     */
+    private void createLegacyLevel() {
         bricks.clear();
         int level = scoreManager.getLevel();
 
@@ -217,6 +262,11 @@ public class GameManager {
     }
 
     private boolean isLevelComplete() {
+        if (currentLevel != null) {
+            return currentLevel.isCompleted();
+        }
+
+        // Fallback check
         for (Brick brick : bricks) {
             if (!brick.isDestroyed() && brick.getType() != BrickType.UNBREAKABLE) {
                 return false;
@@ -228,6 +278,7 @@ public class GameManager {
     public void startGame() {
         currentState = GameState.PLAYING;
         scoreManager.reset();
+        levelManager.restartGame(); // Reset về level 1
         initializeGame();
     }
 
@@ -237,9 +288,17 @@ public class GameManager {
     }
 
     public void nextLevel() {
-        scoreManager.nextLevel();
-        resetLevel();
-        currentState = GameState.PLAYING;
+        boolean hasNextLevel = levelManager.nextLevel();
+
+        if (hasNextLevel) {
+            scoreManager.nextLevel();
+            resetLevel();
+            currentState = GameState.PLAYING;
+        } else {
+            // Hết level - game hoàn thành
+            currentState = GameState.GAME_OVER;
+            System.out.println("🎉 Congratulations! You completed all levels!");
+        }
     }
 
     private void resetLevel() {
@@ -247,7 +306,17 @@ public class GameManager {
         balls.clear();
         balls.add(new Ball(paddle));
         powerUps.clear();
-        createLevel();
+        activePowerUps.clear();
+
+        // Reset bricks về trạng thái ban đầu
+        if (currentLevel != null) {
+            currentLevel.reset(); // Re-initialize từ LevelData
+            bricks.clear();
+            bricks.addAll(currentLevel.getBricks());
+            System.out.println("🔄 Reset level: " + currentLevel.getLevelName());
+        } else {
+            loadCurrentLevel();
+        }
     }
 
     private void resetBall() {
@@ -261,6 +330,31 @@ public class GameManager {
         }
     }
 
+    /**
+     * Chọn level cụ thể (từ Level Selection UI)
+     */
+    /**
+     * Chọn level cụ thể (từ Level Selection UI)
+     */
+    public void selectLevel(int levelNumber) {
+        if (levelManager.selectLevel(levelNumber)) {
+            currentLevel = levelManager.getCurrentLevel(); // ✅ cập nhật level hiện tại
+            resetLevel();                                  // ✅ nạp lại bricks theo level mới
+            currentState = GameState.PLAYING;
+            System.out.println("✅ Selected Level " + currentLevel.getLevelNumber() + ": " + currentLevel.getLevelName());
+        } else {
+            System.out.println("⚠️ Không thể chọn level " + levelNumber + " (không tồn tại)");
+        }
+    }
+
+
+    /**
+     * Mở màn hình chọn level
+     */
+    public void showLevelSelection() {
+        currentState = GameState.MENU;
+    }
+
     // Getters
     public GameState getCurrentState() { return currentState; }
     public Paddle getPaddle() { return paddle; }
@@ -268,10 +362,10 @@ public class GameManager {
     public List<Brick> getBricks() { return bricks; }
     public List<PowerUps> getPowerUps() { return powerUps; }
     public ScoreManager getScoreManager() { return scoreManager; }
+    public LevelManager getLevelManager() { return levelManager; }
+    public Level getCurrentLevel() { return currentLevel; }
 
     public void setCurrentState(GameState gameState) {
         this.currentState = gameState;
     }
-
-
 }

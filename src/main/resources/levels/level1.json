@@ -1,0 +1,16 @@
+{
+  "levelNumber": 1,
+  "name": "Hard Challenge",
+  "ballSpeed": 5.0,
+  "lives": 3,
+  "bricks": [
+    {"row": 0, "col": 1, "type": "HARD", "color": "#8B0000"},
+    {"row": 0, "col": 2, "type": "HARD", "color": "#8B0000"},
+    {"row": 0, "col": 3, "type": "HARD", "color": "#8B0000"},
+    {"row": 0, "col": 4, "type": "UNBREAKABLE", "color": "#808080"},
+    {"row": 0, "col": 5, "type": "UNBREAKABLE", "color": "#808080"},
+    {"row": 0, "col": 6, "type": "HARD", "color": "#8B0000"},
+    {"row": 0, "col": 7, "type": "HARD", "color": "#8B0000"},
+    {"row": 0, "col": 8, "type": "HARD", "color": "#8B0000"}
+  ]
+}
