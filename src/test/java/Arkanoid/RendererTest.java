@@ -26,6 +26,7 @@ public class RendererTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) {
+        // Khởi tạo Scene/Stage để kích hoạt JavaFX toolkit (TestFX sẽ gọi method này trên FX thread)
         canvas = new Canvas(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         gc = canvas.getGraphicsContext2D();
         renderer = new Renderer(gc);
@@ -37,10 +38,12 @@ public class RendererTest extends ApplicationTest {
 
     @BeforeEach
     void setupGame() {
-
+        // Khởi tạo game bằng API hiện có (GameManager không có resetGame())
+        // startGame() sẽ reset ScoreManager và gọi initializeGame()
         gameManager.startGame();
     }
 
+    // Helper: chạy renderer.render(...) trên FX thread và chờ hoàn tất (nếu có ngoại lệ trên FX thread sẽ trả về)
     private void runRenderOnFxAndWait() throws Exception {
         WaitForAsyncUtils.asyncFx(() -> {
             renderer.render(gameManager);

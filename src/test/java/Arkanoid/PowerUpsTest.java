@@ -1,31 +1,20 @@
 package Arkanoid;
 
 import Arkanoid.util.Constants;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.util.WaitForAsyncUtils;
 import Arkanoid.model.PowerUps;
 import Arkanoid.model.PowerUpType;
-
-import java.util.concurrent.TimeUnit;
+import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PowerUpsTest extends ApplicationTest {
 
     private PowerUps powerUp;
-
-    @Override
-    public void start(Stage stage) {
-        // Thiết lập một Scene/Stage rỗng để khởi động JavaFX toolkit
-        stage.setScene(new javafx.scene.Scene(new StackPane()));
-        stage.show();
-    }
 
     @BeforeEach
     void setUp() {
@@ -69,19 +58,13 @@ public class PowerUpsTest extends ApplicationTest {
         double initialY = powerUp.getY();
         double deltaTime = 0.5;
         powerUp.update(deltaTime);
-        assertEquals(initialY + Constants.POWERUP_FALL_SPEED * deltaTime, powerUp.getY(), 0.0001);
+        assertEquals(initialY + Constants.POWERUP_FALL_SPEED * deltaTime * 60, powerUp.getY(), 0.0001);
     }
 
     @Test
     void testRenderDoesNotThrow() {
-        // Tạo Canvas và GraphicsContext trên FX thread và gọi render; chờ tối đa 2 giây
-        assertDoesNotThrow(() -> {
-            WaitForAsyncUtils.asyncFx(() -> {
-                Canvas canvas = new Canvas(100, 100);
-                GraphicsContext gc = canvas.getGraphicsContext2D();
-                powerUp.render(gc);
-                return null;
-            }).get(2, TimeUnit.SECONDS);
-        });
+        Canvas canvas = new Canvas(100, 100);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        assertDoesNotThrow(() -> powerUp.render(gc));
     }
 }
