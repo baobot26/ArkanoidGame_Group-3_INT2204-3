@@ -83,16 +83,19 @@ import javafx.scene.paint.Stop;
         if (smoothX <= 0) {
             smoothX = 0;
             velocityX = Math.abs(velocityX);
+            Arkanoid.audio.SoundManager.getInstance().playSound("effect_wall");
         }
         if (smoothX + radius * 2 >= Constants.WINDOW_WIDTH) {
             smoothX = Constants.WINDOW_WIDTH - radius * 2;
             velocityX = -Math.abs(velocityX);
+            Arkanoid.audio.SoundManager.getInstance().playSound("effect_wall");
         }
 
         // Top wall
         if (smoothY <= 0) {
             smoothY = 0;
             velocityY = Math.abs(velocityY);
+            Arkanoid.audio.SoundManager.getInstance().playSound("effect_wall");
         }
 
         x = smoothX;

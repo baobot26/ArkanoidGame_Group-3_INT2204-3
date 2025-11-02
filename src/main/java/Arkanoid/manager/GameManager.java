@@ -4,6 +4,7 @@ import Arkanoid.level.Level;
 import Arkanoid.level.LevelManager;
 import Arkanoid.model.*;
 import Arkanoid.util.Constants;
+import Arkanoid.audio.SoundManager;
 import java.util.*;
 
 /**
@@ -41,7 +42,9 @@ public class GameManager {
     if (detected <= 0) detected = 3; // fallback
     this.levelManager.loadLevels(detected);
 
-        initializeGame();
+    // Load sounds
+    SoundManager.getInstance().loadDefaultSounds();
+    initializeGame();
     }
 
     private void initializeGame() {
@@ -201,6 +204,8 @@ public class GameManager {
             boolean destroyed = hitBrick.hit();
             if (destroyed) {
                 scoreManager.addScore(hitBrick.getScore());
+                Arkanoid.audio.SoundManager.getInstance().playSound("effect_brick");
+                Arkanoid.audio.SoundManager.getInstance().playSound("effect_score");
 
                 if (random.nextInt(100) < 15) {
                     spawnPowerUp(hitBrick.getCenterX(), hitBrick.getCenterY());
@@ -310,6 +315,10 @@ public class GameManager {
         scoreManager.reset();
         levelManager.restartGame(); // Reset về level 1
     initializeGame();
+    // Stage start: play start music for ~5 seconds
+    SoundManager sm = SoundManager.getInstance();
+    sm.stopAll();
+    sm.playSound("music_stage_start");
     }
 
     /**
@@ -332,10 +341,17 @@ public class GameManager {
             currentLevel = levelManager.getCurrentLevel();
             resetLevel();
             currentState = GameState.PLAYING;
+            // Play short stage start jingle on level advance
+            SoundManager sm = SoundManager.getInstance();
+            sm.playSound("music_stage_start");
         } else {
             // Hết level - game hoàn thành
             currentState = GameState.GAME_OVER;
-            System.out.println("🎉 Congratulations! You completed all levels!");
+            System.out.println("Congratulations! You completed all levels!");
+            // Play title when player wins (until completion)
+            SoundManager sm = SoundManager.getInstance();
+            sm.stopAll();
+            sm.playSound("music_title");
         }
     }
 
@@ -406,6 +422,9 @@ public class GameManager {
      */
     public void showLevelSelection() {
         currentState = GameState.MENU;
+    SoundManager sm = SoundManager.getInstance();
+    sm.stopAll();
+    sm.playSound("music_title");
     }
 
     // Getters
