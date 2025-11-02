@@ -4,13 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a702c1d6-71ac-4f24-b02d-8f0ce0610828" name="Changes" comment="feat: add more soundtrack in soundtrack folder.&#10;fix: fixing the PowerUpsTest class&#10;fix: add maven">
+    <list default="true" id="a702c1d6-71ac-4f24-b02d-8f0ce0610828" name="Changes" comment="fix: add duration to powerUps class&#10;fix: add more constants to constants class&#10;fix: more function to gạmemanager">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/GameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/manager/GameManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Ball.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Paddle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/Paddle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/model/PowerUps.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Arkanoid/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Arkanoid/util/Constants.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,25 +42,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main (1).executor": "Run",
-    "Application.Main.executor": "Run",
-    "Application.Unnamed.executor": "Run",
-    "JUnit.BallTest.executor": "Run",
-    "JUnit.PowerUpsTest.executor": "Debug",
-    "JUnit.RendererTest.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "ducdong",
-    "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main (1).executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BallTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.PowerUpsTest.executor&quot;: &quot;Debug&quot;,
+    &quot;JUnit.RendererTest.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ducdong&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-24" />
@@ -155,13 +150,22 @@
       <option name="project" value="LOCAL" />
       <updated>1762075788402</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fix: add duration to powerUps class&#10;fix: add more constants to constants class&#10;fix: more function to gạmemanager">
+      <option name="closed" value="true" />
+      <created>1762092285868</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1762092285868</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: add junit test for powerUps and Renderrer&#10;fix: fixing the PowerUps class" />
     <MESSAGE value="feat: add more soundtrack in soundtrack folder.&#10;fix: fixing the PowerUpsTest class&#10;fix: add maven" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add more soundtrack in soundtrack folder.&#10;fix: fixing the PowerUpsTest class&#10;fix: add maven" />
+    <MESSAGE value="fix: add duration to powerUps class&#10;fix: add more constants to constants class&#10;fix: more function to gạmemanager" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: add duration to powerUps class&#10;fix: add more constants to constants class&#10;fix: more function to gạmemanager" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/game$Main.ic" NAME="Main Coverage Results" MODIFIED="1761896860773" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">

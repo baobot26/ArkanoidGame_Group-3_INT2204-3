@@ -1,0 +1,21 @@
+{
+  "background": "storm.png",
+  "bricks": [
+    { "type": 1, "x": 50, "y": 40, "width": 75, "height": 20, "color": 0 },
+    { "type": 2, "x": 135, "y": 40, "width": 75, "height": 20, "color": 4 },
+    { "type": 1, "x": 220, "y": 40, "width": 75, "height": 20, "color": 1 },
+    { "type": 2, "x": 305, "y": 40, "width": 75, "height": 20, "color": 5 },
+    { "type": 1, "x": 390, "y": 40, "width": 75, "height": 20, "color": 2 },
+    { "type": 2, "x": 475, "y": 40, "width": 75, "height": 20, "color": 6 },
+    { "type": 1, "x": 560, "y": 40, "width": 75, "height": 20, "color": 3 },
+    { "type": 2, "x": 645, "y": 40, "width": 75, "height": 20, "color": 7 },
+
+    { "type": 1, "x": 90, "y": 70, "width": 75, "height": 20, "color": 1 },
+    { "type": 2, "x": 175, "y": 70, "width": 75, "height": 20, "color": 5 },
+    { "type": 1, "x": 260, "y": 70, "width": 75, "height": 20, "color": 2 },
+    { "type": 2, "x": 345, "y": 70, "width": 75, "height": 20, "color": 6 },
+    { "type": 1, "x": 430, "y": 70, "width": 75, "height": 20, "color": 3 },
+    { "type": 2, "x": 515, "y": 70, "width": 75, "height": 20, "color": 7 },
+    { "type": 1, "x": 600, "y": 70, "width": 75, "height": 20, "color": 4 }
+  ]
+}
