@@ -49,6 +49,10 @@ public class InputHandler {
                     System.out.println("onShowLevelSelection callback is null!");
                 }
             }
+            case S -> {
+                // Open settings via menu key
+                Arkanoid.view.SettingsView.showSettings();
+            }
             case ESCAPE -> {
                 // Exit game from menu with ESC
                 System.out.println("Exiting game...");
