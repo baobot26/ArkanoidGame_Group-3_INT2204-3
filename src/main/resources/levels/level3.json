@@ -1,7 +1,7 @@
 {
   "levelNumber": 3,
   "name": "Dynamic Gauntlet",
-  "ballSpeed": 5.2,
+  "ballSpeed": 7.0,
   "lives": 3,
   "bricks": [
     {"row": 0, "col": 2, "type": "HARD", "color": "#8B0000", "moving": true, "direction": "HORIZONTAL", "speed": 60, "range": 50},

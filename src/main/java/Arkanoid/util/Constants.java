@@ -14,15 +14,15 @@ public class Constants {
     public static final int WINDOW_HEIGHT = 600;
 
     // Paddle
-    public static final int PADDLE_WIDTH = 200;
+    public static final int PADDLE_WIDTH = 120;
     public static final int PADDLE_HEIGHT = 15;
     public static final int PADDLE_Y = 550;
     public static final double PADDLE_SPEED = 6.5;
     public static final Color PADDLE_COLOR = Color.DODGERBLUE;
 
     // Ball
-    public static final int BALL_RADIUS = 8;
-    public static final double BALL_SPEED = 4.5;
+    public static final int BALL_RADIUS = 12;
+    public static final double BALL_SPEED = 6.5;
     public static final Color BALL_COLOR = Color.WHITE;
 
     // Bricks
