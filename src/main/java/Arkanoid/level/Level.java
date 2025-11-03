@@ -2,6 +2,7 @@ package Arkanoid.level;
 
 import Arkanoid.model.Brick;
 import Arkanoid.model.BrickType;
+import Arkanoid.model.MovingBrick;
 import Arkanoid.util.Constants;
 import javafx.scene.paint.Color;
 
@@ -55,6 +56,17 @@ public class Level extends AbstractLevel {
 
         // Parse color
         Color color = parseColor(data.getColor());
+
+        // Moving brick support
+        boolean moving = Boolean.TRUE.equals(data.getMoving());
+        if (moving) {
+            String dir = data.getDirection() == null ? "HORIZONTAL" : data.getDirection().toUpperCase();
+            double speed = data.getSpeed() != null ? data.getSpeed() : 40.0; // px/s default
+            double range = data.getRange() != null ? data.getRange() : 60.0; // px default
+
+            MovingBrick.Axis axis = "VERTICAL".equals(dir) ? MovingBrick.Axis.VERTICAL : MovingBrick.Axis.HORIZONTAL;
+            return new MovingBrick(x, y, Constants.BRICK_WIDTH, Constants.BRICK_HEIGHT, type, color, axis, speed, range);
+        }
 
         return new Brick(x, y, Constants.BRICK_WIDTH, Constants.BRICK_HEIGHT, type, color);
     }
