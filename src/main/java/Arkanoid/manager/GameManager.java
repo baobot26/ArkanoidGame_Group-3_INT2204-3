@@ -150,6 +150,11 @@ public class GameManager {
 
         paddle.update(deltaTime);
 
+        // Update bricks (for moving bricks)
+        for (Brick brick : bricks) {
+            brick.update(deltaTime);
+        }
+
         // Update bóng
         Iterator<Ball> ballIterator = balls.iterator();
         while (ballIterator.hasNext()) {

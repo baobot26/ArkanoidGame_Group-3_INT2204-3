@@ -77,6 +77,11 @@ public class LevelData {
         private int col;
         private String type; // "NORMAL", "HARD", "UNBREAKABLE"
         private String color; // Hex color like "#FF0000"
+    // Optional motion config (for dynamic bricks)
+    private Boolean moving;         // default false
+    private String direction;       // "HORIZONTAL" or "VERTICAL"
+    private Double speed;           // pixels per second
+    private Double range;           // max offset from origin in pixels
 
         // Constructor
         public BrickData() {}
@@ -86,6 +91,10 @@ public class LevelData {
             this.col = col;
             this.type = type;
             this.color = color;
+            this.moving = false;
+            this.direction = null;
+            this.speed = null;
+            this.range = null;
         }
 
         // Getters and setters
@@ -120,5 +129,15 @@ public class LevelData {
         public void setColor(String color) {
             this.color = color;
         }
+
+    // Motion getters/setters
+    public Boolean getMoving() { return moving; }
+    public void setMoving(Boolean moving) { this.moving = moving; }
+    public String getDirection() { return direction; }
+    public void setDirection(String direction) { this.direction = direction; }
+    public Double getSpeed() { return speed; }
+    public void setSpeed(Double speed) { this.speed = speed; }
+    public Double getRange() { return range; }
+    public void setRange(Double range) { this.range = range; }
     }
 }
