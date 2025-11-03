@@ -5,14 +5,16 @@ import Arkanoid.level.LevelManager;
 import Arkanoid.model.*;
 import Arkanoid.util.Constants;
 import Arkanoid.audio.SoundManager;
-import java.util.Timer;
-import java.util.TimerTask;
+
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Central coordinator for game state, entities and level progression.
- * Owns paddle/balls/bricks/power-ups, updates collisions and scoring,
- * and communicates with {@link Arkanoid.level.LevelManager} to load and advance levels.
+ * FIXED: Proper thread management, no memory leaks, cancellable tasks.
  */
 public class GameManager {
     private GameState currentState;
@@ -28,8 +30,14 @@ public class GameManager {
     private LevelManager levelManager;
     private Level currentLevel;
 
-    // Quản lý thời gian hiệu lực của PowerUps
-    private Map<PowerUpType, Double> activePowerUps;
+    // PowerUp timing
+    private final Map<PowerUpType, Double> activePowerUps;
+
+    // ✅ Thread scheduler (single instance, reused)
+    private final ScheduledExecutorService scheduler;
+
+    // ✅ Track scheduled task để có thể cancel
+    private ScheduledFuture<?> stageStartTask;
 
     public GameManager() {
         this.currentState = GameState.MENU;
@@ -38,16 +46,22 @@ public class GameManager {
         this.random = new Random();
         this.activePowerUps = new HashMap<>();
 
-        // Initialize Level Manager
-    this.levelManager = new LevelManager();
-    int detected = Arkanoid.level.LevelLoader.countAvailableLevels(50);
-    if (detected <= 0) detected = 3; // fallback
-    this.levelManager.loadLevels(detected);
+        // ✅ Initialize scheduler once
+        this.scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread t = new Thread(r, "GameManager-Scheduler");
+            t.setDaemon(true); // Daemon thread tự động dừng khi app tắt
+            return t;
+        });
 
-    // Load sounds and apply saved settings
-    SoundManager.getInstance().loadDefaultSounds();
-    Arkanoid.audio.AudioSetting.getInstance().loadSettings();
-    initializeGame();
+        // Initialize Level Manager
+        this.levelManager = new LevelManager();
+        int detected = Arkanoid.level.LevelLoader.countAvailableLevels(50);
+        if (detected <= 0) detected = 3;
+        this.levelManager.loadLevels(detected);
+
+        // Load sounds
+        SoundManager.getInstance().loadDefaultSounds();
+        initializeGame();
     }
 
     private void initializeGame() {
@@ -60,9 +74,6 @@ public class GameManager {
         loadCurrentLevel();
     }
 
-    /**
-     * Loads the current level from LevelManager and applies level configuration.
-     */
     private void loadCurrentLevel() {
         currentLevel = levelManager.getCurrentLevel();
 
@@ -70,32 +81,26 @@ public class GameManager {
             System.out.println("Loading level: " + currentLevel.getLevelName() +
                     " (Level " + currentLevel.getLevelNumber() + ")");
 
-            // Level is already initialized in LevelManager.loadLevels()
-
-            // Load bricks from level
             bricks.clear();
             bricks.addAll(currentLevel.getBricks());
 
             System.out.println("Loaded " + bricks.size() + " bricks from level data");
-                // Apply level configuration: ball speed and lives
-                try {
-                    double levelBallSpeed = currentLevel.getBallSpeed();
-                    int levelLives = currentLevel.getInitialLives();
 
-                    // Update lives if provided
-                    if (levelLives > 0) {
-                        scoreManager.setLives(levelLives);
-                    }
+            try {
+                double levelBallSpeed = currentLevel.getBallSpeed();
+                int levelLives = currentLevel.getInitialLives();
 
-                    // Update ball speed for all existing balls
-                    for (Ball b : balls) {
-                        b.setBaseSpeed(levelBallSpeed);
-                    }
-                } catch (Exception ignored) {
-                    // keep defaults on malformed level data
+                if (levelLives > 0) {
+                    scoreManager.setLives(levelLives);
                 }
 
-            // Debug: Print first few bricks
+                for (Ball b : balls) {
+                    b.setBaseSpeed(levelBallSpeed);
+                }
+            } catch (Exception ignored) {
+            }
+
+            // Debug
             for (int i = 0; i < Math.min(3, bricks.size()); i++) {
                 Brick b = bricks.get(i);
                 System.out.println("   Brick " + i + ": type=" + b.getType() +
@@ -103,14 +108,10 @@ public class GameManager {
             }
         } else {
             System.out.println("Current level is NULL! Using legacy level generation");
-            // Fallback: create legacy level if loading failed
             createLegacyLevel();
         }
     }
 
-    /**
-     * Tạo level theo cách cũ (fallback)
-     */
     private void createLegacyLevel() {
         bricks.clear();
         int level = scoreManager.getLevel();
@@ -142,21 +143,15 @@ public class GameManager {
         return BrickType.NORMAL;
     }
 
-    /**
-     * Advances the game simulation by deltaTime when in PLAYING state.
-     * Updates paddle, balls, power-ups, checks collisions and level completion.
-     */
     public void update(double deltaTime) {
         if (currentState != GameState.PLAYING) return;
 
         paddle.update(deltaTime);
 
-        // Update bricks (for moving bricks)
         for (Brick brick : bricks) {
             brick.update(deltaTime);
         }
 
-        // Update bóng
         Iterator<Ball> ballIterator = balls.iterator();
         while (ballIterator.hasNext()) {
             Ball ball = ballIterator.next();
@@ -168,8 +163,7 @@ public class GameManager {
                     scoreManager.loseLife();
                     if (scoreManager.isGameOver()) {
                         currentState = GameState.GAME_OVER;
-                        // Play game over music to completion and stop ambient/effects
-                        Arkanoid.audio.SoundManager sm = Arkanoid.audio.SoundManager.getInstance();
+                        SoundManager sm = SoundManager.getInstance();
                         sm.stopAll();
                         sm.playSound("music_gameover");
                     } else {
@@ -181,7 +175,6 @@ public class GameManager {
             }
         }
 
-        // Update PowerUps rơi xuống và va chạm paddle
         Iterator<PowerUps> powerUpIterator = powerUps.iterator();
         while (powerUpIterator.hasNext()) {
             PowerUps powerUp = powerUpIterator.next();
@@ -200,7 +193,6 @@ public class GameManager {
             }
         }
 
-        // Kiểm tra hết hạn PowerUp
         updateActivePowerUps();
 
         if (isLevelComplete()) {
@@ -216,8 +208,8 @@ public class GameManager {
             boolean destroyed = hitBrick.hit();
             if (destroyed) {
                 scoreManager.addScore(hitBrick.getScore());
-                Arkanoid.audio.SoundManager.getInstance().playSound("effect_brick");
-                Arkanoid.audio.SoundManager.getInstance().playSound("effect_score");
+                SoundManager.getInstance().playSound("effect_brick");
+                SoundManager.getInstance().playSound("effect_score");
 
                 if (random.nextInt(100) < 15) {
                     spawnPowerUp(hitBrick.getCenterX(), hitBrick.getCenterY());
@@ -233,7 +225,7 @@ public class GameManager {
     }
 
     private void applyPowerUp(PowerUpType type) {
-        long now = System.currentTimeMillis();
+        double now = System.currentTimeMillis(); // ✅ Đổi thành double
 
         switch (type) {
             case EXPAND_PADDLE:
@@ -276,11 +268,11 @@ public class GameManager {
     }
 
     private void updateActivePowerUps() {
-        long now = System.currentTimeMillis();
-        Iterator<Map.Entry<PowerUpType, Double>> iterator = activePowerUps.entrySet().iterator();
+        double now = System.currentTimeMillis(); // ✅ Đổi thành double
+        Iterator<Map.Entry<PowerUpType, Double>> iterator = activePowerUps.entrySet().iterator(); // ✅ Đổi Long thành Double
 
         while (iterator.hasNext()) {
-            Map.Entry<PowerUpType, Double> entry = iterator.next();
+            Map.Entry<PowerUpType, Double> entry = iterator.next(); // ✅ Đổi Long thành Double
             if (now > entry.getValue()) {
                 deactivatePowerUp(entry.getKey());
                 iterator.remove();
@@ -310,7 +302,6 @@ public class GameManager {
             return currentLevel.isCompleted();
         }
 
-        // Fallback check
         for (Brick brick : bricks) {
             if (!brick.isDestroyed() && brick.getType() != BrickType.UNBREAKABLE) {
                 return false;
@@ -319,50 +310,39 @@ public class GameManager {
         return true;
     }
 
-    /**
-     * Starts a new game from level 1 and enters PLAYING state.
-     */
     public void startGame() {
         currentState = GameState.PLAYING;
         scoreManager.reset();
-        levelManager.restartGame(); // Reset về level 1
-    initializeGame();
-    // Stage start: play start music for ~5 seconds
-    SoundManager sm = SoundManager.getInstance();
-    sm.stopAll();
-    sm.playSound("music_stage_start");
-    scheduleStageStartStop();
+        levelManager.restartGame();
+        initializeGame();
+
+        SoundManager sm = SoundManager.getInstance();
+        sm.stopAll();
+        sm.playSound("music_stage_start");
+        scheduleStageStartStop();
     }
 
-    /**
-     * Toggles between PLAYING and PAUSED states.
-     */
     public void pauseGame() {
         if (currentState == GameState.PLAYING) currentState = GameState.PAUSED;
         else if (currentState == GameState.PAUSED) currentState = GameState.PLAYING;
     }
 
-    /**
-     * Advances to the next level if available, otherwise sets GAME_OVER when all levels are finished.
-     */
     public void nextLevel() {
         boolean hasNextLevel = levelManager.nextLevel();
 
-    if (hasNextLevel) {
+        if (hasNextLevel) {
             scoreManager.nextLevel();
-            // Ensure we reference the new current level from LevelManager
             currentLevel = levelManager.getCurrentLevel();
             resetLevel();
             currentState = GameState.PLAYING;
-            // Play short stage start jingle on level advance
+
             SoundManager sm = SoundManager.getInstance();
             sm.playSound("music_stage_start");
             scheduleStageStartStop();
         } else {
-            // Hết level - game hoàn thành
             currentState = GameState.GAME_OVER;
             System.out.println("Congratulations! You completed all levels!");
-            // Play title when player wins (until completion)
+
             SoundManager sm = SoundManager.getInstance();
             sm.stopAll();
             sm.playSound("music_title");
@@ -370,31 +350,29 @@ public class GameManager {
     }
 
     private void resetLevel() {
-        // Always refresh the current level from the manager to avoid stale reference
         if (levelManager != null) {
             currentLevel = levelManager.getCurrentLevel();
         }
+
         paddle.reset();
-        // Clear movement flags to avoid drift when entering a new level
         paddle.setMovingLeft(false);
         paddle.setMovingRight(false);
+
         balls.clear();
         Ball newBall = new Ball(paddle);
-        // Áp dụng tốc độ bóng theo level hiện tại
         if (currentLevel != null) {
             newBall.setBaseSpeed(currentLevel.getBallSpeed());
         }
         balls.add(newBall);
+
         powerUps.clear();
         activePowerUps.clear();
 
-        // Reset bricks về trạng thái ban đầu
         if (currentLevel != null) {
-            currentLevel.reset(); // Re-initialize from LevelData
+            currentLevel.reset();
             bricks.clear();
             bricks.addAll(currentLevel.getBricks());
             System.out.println("Reset level: " + currentLevel.getLevelName());
-            // Reset lives from level when resetting
             scoreManager.setLives(currentLevel.getInitialLives());
         } else {
             loadCurrentLevel();
@@ -406,23 +384,19 @@ public class GameManager {
         balls.add(new Ball(paddle));
     }
 
-    /**
-     * Launches any balls currently stuck to the paddle.
-     */
     public void launchBall() {
         for (Ball ball : balls) {
             if (ball.isStuck()) ball.launch();
         }
     }
 
-    /**
-     * Selects a specific level by 1-based index and resets state to play it.
-     * Intended to be invoked by the Level Selection UI.
-     */
     public void selectLevel(int levelNumber) {
         if (levelManager.selectLevel(levelNumber)) {
-            currentLevel = levelManager.getCurrentLevel(); // update current level
-            resetLevel();                                  // reload bricks for the new level
+            // ⚠️ CRITICAL: Cleanup trước khi load level mới
+            cleanup();
+
+            currentLevel = levelManager.getCurrentLevel();
+            resetLevel();
             currentState = GameState.PLAYING;
             System.out.println("Selected Level " + currentLevel.getLevelNumber() + ": " + currentLevel.getLevelName());
         } else {
@@ -430,57 +404,114 @@ public class GameManager {
         }
     }
 
-
-    /**
-     * Shows the level selection/menu state.
-     */
     public void showLevelSelection() {
+        // ⚠️ CRITICAL: Cleanup TRƯỚC khi đổi state
+        cleanup();
+
         currentState = GameState.MENU;
-    SoundManager sm = SoundManager.getInstance();
-    sm.stopAll();
-    sm.playSound("music_title");
+        SoundManager sm = SoundManager.getInstance();
+        sm.stopAll();
+        sm.playSound("music_title");
     }
 
     /**
-     * Ensure stage start jingle plays for exactly 5 seconds, then stop it
-     * and optionally start ambient background.
+     * ✅ Schedule với khả năng cancel task cũ
      */
     private void scheduleStageStartStop() {
-        Timer timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                SoundManager sm = SoundManager.getInstance();
-                sm.stopSound("music_stage_start");
-                // Start alternating background and ambient after jingle (ambient is much quieter)
-                sm.startBackgroundAlternating();
-                sm.playSound("ambient_bg");
+        // ✅ Cancel task cũ trước khi tạo mới
+        cancelStageStartTask();
+
+        // ✅ Lưu reference để có thể cancel sau này
+        stageStartTask = scheduler.schedule(() -> {
+            SoundManager sm = SoundManager.getInstance();
+            sm.stopSound("music_stage_start");
+            sm.startBackgroundAlternating();
+            sm.playSound("ambient_bg");
+
+            // ✅ Clear reference sau khi task hoàn thành
+            stageStartTask = null;
+        }, 5, TimeUnit.SECONDS);
+    }
+
+    /**
+     * ✅ Cancel pending stage start task
+     */
+    private void cancelStageStartTask() {
+        if (stageStartTask != null && !stageStartTask.isDone()) {
+            stageStartTask.cancel(false); // false = không interrupt nếu đang chạy
+            System.out.println("🔴 Cancelled pending stage start task");
+        }
+        stageStartTask = null;
+    }
+
+    /**
+     * ✅ Cleanup khi thoát game hoặc về menu
+     */
+    public void cleanup() {
+        System.out.println("🧹 Starting cleanup...");
+
+        // ⚠️ CRITICAL: Cancel scheduled tasks TRƯỚC
+        cancelStageStartTask();
+
+        // ⚠️ CRITICAL: Clear collections và null references
+        if (balls != null) {
+            balls.clear();
+            // balls = null; // Không null vì sẽ reuse
+        }
+        if (bricks != null) {
+            bricks.clear();
+        }
+        if (powerUps != null) {
+            powerUps.clear();
+        }
+        if (activePowerUps != null) {
+            activePowerUps.clear();
+        }
+
+        // ⚠️ CRITICAL: Stop ALL sounds
+        try {
+            SoundManager.getInstance().stopAll();
+        } catch (Exception e) {
+            System.err.println("Error stopping sounds: " + e.getMessage());
+        }
+
+        System.out.println("🧹 GameManager cleaned up");
+    }
+
+    /**
+     * ✅ Shutdown scheduler khi app đóng (gọi từ Application.stop())
+     */
+    public void shutdown() {
+        cancelStageStartTask();
+
+        scheduler.shutdown();
+        try {
+            if (!scheduler.awaitTermination(2, TimeUnit.SECONDS)) {
+                scheduler.shutdownNow();
             }
-        }, 5000);
+        } catch (InterruptedException e) {
+            scheduler.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("🛑 GameManager scheduler shutdown complete");
     }
 
     // Getters
-    /** @return the current high-level game state (menu, playing, etc.). */
     public GameState getCurrentState() { return currentState; }
-    /** @return the player paddle instance. */
     public Paddle getPaddle() { return paddle; }
-    /** @return a live list of active balls. */
     public List<Ball> getBalls() { return balls; }
-    /** @return a live list of bricks in the current level. */
     public List<Brick> getBricks() { return bricks; }
-    /** @return a live list of active power-ups. */
     public List<PowerUps> getPowerUps() { return powerUps; }
-    /** @return the score manager tracking score, lives and level index. */
     public ScoreManager getScoreManager() { return scoreManager; }
-    /** @return the level manager used to load and navigate levels. */
     public LevelManager getLevelManager() { return levelManager; }
-    /** @return the currently loaded level or null if using legacy fallback. */
     public Level getCurrentLevel() { return currentLevel; }
-
-    /**
-     * Sets the high-level game state (e.g., MENU, PLAYING, PAUSED, etc.).
-     */
     public void setCurrentState(GameState gameState) {
+        // ⚠️ CRITICAL: Cleanup khi chuyển state
+        if (gameState == GameState.MENU && currentState != GameState.MENU) {
+            cleanup();
+        }
+
         this.currentState = gameState;
     }
 }
