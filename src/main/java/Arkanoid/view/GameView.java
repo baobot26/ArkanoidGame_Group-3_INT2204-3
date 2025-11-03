@@ -18,6 +18,7 @@ public class GameView {
     private GraphicsContext gc;
     private Renderer renderer;
     private InputHandler inputHandler;
+    private StackPane root;
 
     public GameView(GameManager gameManager) {
         // Create canvas
@@ -31,8 +32,11 @@ public class GameView {
         inputHandler = new InputHandler(gameManager);
 
         // Create scene
-        StackPane root = new StackPane(canvas);
+        root = new StackPane(canvas);
         scene = new Scene(root, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+
+        // ✅ Make root focusable để nhận input
+        root.setFocusTraversable(true);
 
         // Set up input handling
         scene.setOnKeyPressed(inputHandler::handleKeyPressed);
@@ -58,5 +62,27 @@ public class GameView {
      */
     public InputHandler getInputHandler() {
         return inputHandler;
+    }
+
+    /**
+     * ✅ Request focus để đảm bảo input handler hoạt động
+     */
+    public void requestFocus() {
+        if (root != null) {
+            root.requestFocus();
+        }
+    }
+
+    /**
+     * ✅ Cleanup resources khi không dùng nữa
+     */
+    public void cleanup() {
+        // Clear event handlers to prevent memory leaks
+        if (scene != null) {
+            scene.setOnKeyPressed(null);
+            scene.setOnKeyReleased(null);
+        }
+
+        System.out.println("🧹 GameView cleaned up");
     }
 }

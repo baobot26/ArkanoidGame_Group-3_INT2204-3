@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 /**
  * Concrete Level implementation built from {@link LevelData}.
  * Converts {@code LevelData.BrickData} instances into concrete bricks using layout constants
- * and exposes derived per-level settings (ball speed, initial lives).
+ * and exposes derived per-level settings (ball speed, initial lives, background).
  */
 public class Level extends AbstractLevel {
     private LevelData levelData;
@@ -41,7 +41,7 @@ public class Level extends AbstractLevel {
 
     @Override
     public void reset() {
-    // Re-initialize level from levelData
+        // Re-initialize level from levelData
         initialize();
     }
 
@@ -121,5 +121,13 @@ public class Level extends AbstractLevel {
     /** Returns the initial lives for this level. */
     public int getInitialLives() {
         return levelData.getLives();
+    }
+
+    /**
+     * ✅ Returns the background image path for this level.
+     * @return path to background image (e.g., "/images/level/space.png") or null for default
+     */
+    public String getBackgroundImage() {
+        return levelData.getBackgroundImage();
     }
 }

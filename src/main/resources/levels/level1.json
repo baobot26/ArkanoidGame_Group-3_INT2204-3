@@ -3,6 +3,7 @@
   "name": "Hard Challenge",
   "ballSpeed": 6.5,
   "lives": 3,
+  "backgroundImage": "/images/level/space_red.png",
   "bricks": [
     {"row": 0, "col": 1, "type": "HARD", "color": "#8B0000"},
     {"row": 0, "col": 2, "type": "HARD", "color": "#8B0000"},

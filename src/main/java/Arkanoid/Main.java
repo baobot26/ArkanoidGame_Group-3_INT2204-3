@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 /**
  * JavaFX application entry point. Wires together GameManager, GameView,
  * and LevelSelectionView, and drives the main animation loop.
+ * FIXED: Memory leak prevention - proper resource management.
  */
 public class Main extends Application {
     private GameManager gameManager;
@@ -52,8 +53,7 @@ public class Main extends Application {
 
         // Set up stage
         primaryStage.setTitle("Arkanoid Game");
-    // Show the main menu (GameView renders MENU state by default)
-    showGameView();
+        showGameView();
         primaryStage.setResizable(false);
         primaryStage.show();
 
@@ -70,9 +70,12 @@ public class Main extends Application {
     }
 
     private void showLevelSelection() {
-    // Enter MENU state and play title music when opening level selection
-    gameManager.showLevelSelection();
-        levelSelectionView.refresh(); // Cập nhật trạng thái mở khóa
+        // ⚠️ CRITICAL: Cleanup trước khi mở level selection
+        gameManager.cleanup();
+
+        // Enter MENU state and play title music when opening level selection
+        gameManager.showLevelSelection();
+        levelSelectionView.refresh();
         levelSelectionView.show();
         primaryStage.setTitle("Arkanoid - Level Selection");
     }
@@ -86,16 +89,11 @@ public class Main extends Application {
                 double deltaTime = (now - lastUpdate[0]) / 1_000_000_000.0;
                 lastUpdate[0] = now;
 
-                deltaTime = Math.min(deltaTime, 0.05); // giới hạn khung hình
+                deltaTime = Math.min(deltaTime, 0.05);
 
-                // Cập nhật logic game
-                gameManager.update(deltaTime);
-
-                // 🔹 Không tự động mở Level Selection nữa
-                // Người chơi chỉ vào qua phím L hoặc ESC (InputHandler quản lý)
-
-                // 🔹 Render nếu đang ở GameView
+                // ⚠️ CRITICAL: Chỉ update khi ở GameView VÀ đang PLAYING
                 if (primaryStage.getScene() == gameView.getScene()) {
+                    gameManager.update(deltaTime);
                     gameView.render(gameManager);
                 }
             }
@@ -106,9 +104,17 @@ public class Main extends Application {
 
     @Override
     public void stop() {
+        System.out.println("🛑 Application stopping...");
+
         if (gameLoop != null) {
             gameLoop.stop();
         }
+
+        if (gameManager != null) {
+            gameManager.shutdown();
+        }
+
+        System.out.println("✅ Application stopped cleanly");
     }
 
     public static void main(String[] args) {

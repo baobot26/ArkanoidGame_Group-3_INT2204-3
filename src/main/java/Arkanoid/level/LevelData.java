@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Plain data object describing a level configuration loaded from JSON.
  * Contains metadata (number, name), optional per-level parameters (ball speed, lives),
- * and a list of brick descriptors that the game converts into concrete bricks.
+ * background image path, and a list of brick descriptors.
  */
 public class LevelData {
     private int levelNumber;
@@ -14,10 +14,14 @@ public class LevelData {
     private double ballSpeed;
     private int lives;
 
+    // ✅ Background image path (optional)
+    private String backgroundImage;
+
     // Constructor
     public LevelData() {
         this.ballSpeed = 4.5; // Default
         this.lives = 3; // Default
+        this.backgroundImage = null; // Default: no custom background
     }
 
     public LevelData(int levelNumber, String name, List<BrickData> bricks) {
@@ -26,6 +30,7 @@ public class LevelData {
         this.bricks = bricks;
         this.ballSpeed = 4.5;
         this.lives = 3;
+        this.backgroundImage = null;
     }
 
     // Getters and setters
@@ -70,6 +75,22 @@ public class LevelData {
     }
 
     /**
+     * ✅ Gets the background image path for this level.
+     * @return path to image (e.g., "/images/level/space.png") or null for default
+     */
+    public String getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    /**
+     * ✅ Sets the background image path for this level.
+     * @param backgroundImage path to image resource
+     */
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
+
+    /**
      * Inner class describing a single brick cell in the level grid.
      */
     public static class BrickData {
@@ -77,11 +98,12 @@ public class LevelData {
         private int col;
         private String type; // "NORMAL", "HARD", "UNBREAKABLE"
         private String color; // Hex color like "#FF0000"
-    // Optional motion config (for dynamic bricks)
-    private Boolean moving;         // default false
-    private String direction;       // "HORIZONTAL" or "VERTICAL"
-    private Double speed;           // pixels per second
-    private Double range;           // max offset from origin in pixels
+
+        // Optional motion config (for dynamic bricks)
+        private Boolean moving;         // default false
+        private String direction;       // "HORIZONTAL" or "VERTICAL"
+        private Double speed;           // pixels per second
+        private Double range;           // max offset from origin in pixels
 
         // Constructor
         public BrickData() {}
@@ -130,14 +152,14 @@ public class LevelData {
             this.color = color;
         }
 
-    // Motion getters/setters
-    public Boolean getMoving() { return moving; }
-    public void setMoving(Boolean moving) { this.moving = moving; }
-    public String getDirection() { return direction; }
-    public void setDirection(String direction) { this.direction = direction; }
-    public Double getSpeed() { return speed; }
-    public void setSpeed(Double speed) { this.speed = speed; }
-    public Double getRange() { return range; }
-    public void setRange(Double range) { this.range = range; }
+        // Motion getters/setters
+        public Boolean getMoving() { return moving; }
+        public void setMoving(Boolean moving) { this.moving = moving; }
+        public String getDirection() { return direction; }
+        public void setDirection(String direction) { this.direction = direction; }
+        public Double getSpeed() { return speed; }
+        public void setSpeed(Double speed) { this.speed = speed; }
+        public Double getRange() { return range; }
+        public void setRange(Double range) { this.range = range; }
     }
 }
