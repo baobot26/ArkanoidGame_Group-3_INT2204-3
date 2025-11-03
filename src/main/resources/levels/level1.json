@@ -1,7 +1,7 @@
 {
   "levelNumber": 1,
   "name": "Hard Challenge",
-  "ballSpeed": 5.0,
+  "ballSpeed": 6.5,
   "lives": 3,
   "bricks": [
     {"row": 0, "col": 1, "type": "HARD", "color": "#8B0000"},

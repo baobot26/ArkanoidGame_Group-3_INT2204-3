@@ -168,6 +168,22 @@ public class SoundManager {
         });
     }
 
+    /** Set ambient loop volume (0.0-1.0). */
+    public void setAmbientVolume(float volume) {
+        ambientVolume = Math.max(0f, Math.min(1f, volume));
+        setVolume("ambient_bg", ambientVolume);
+    }
+
+    /** Set effects group volume by updating all effect_* sounds. */
+    public void setEffectsVolume(float volume) {
+        float vol = Math.max(0f, Math.min(1f, volume));
+        for (String name : sounds.keySet()) {
+            if (name.startsWith("effect_")) {
+                setVolume(name, vol);
+            }
+        }
+    }
+
     /** Briefly reduce background/ambient so effects cut through. */
     private void duckBackgroundForMillis(long ms) {
         float priorBg = bgVolume;

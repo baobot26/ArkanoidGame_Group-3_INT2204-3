@@ -44,8 +44,9 @@ public class GameManager {
     if (detected <= 0) detected = 3; // fallback
     this.levelManager.loadLevels(detected);
 
-    // Load sounds
+    // Load sounds and apply saved settings
     SoundManager.getInstance().loadDefaultSounds();
+    Arkanoid.audio.AudioSetting.getInstance().loadSettings();
     initializeGame();
     }
 
