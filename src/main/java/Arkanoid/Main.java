@@ -52,7 +52,8 @@ public class Main extends Application {
 
         // Set up stage
         primaryStage.setTitle("Arkanoid Game");
-        showGameView(); // Chỉ hiển thị game view, KHÔNG mở menu chọn level
+    // Show the main menu (GameView renders MENU state by default)
+    showGameView();
         primaryStage.setResizable(false);
         primaryStage.show();
 
@@ -69,6 +70,8 @@ public class Main extends Application {
     }
 
     private void showLevelSelection() {
+    // Enter MENU state and play title music when opening level selection
+    gameManager.showLevelSelection();
         levelSelectionView.refresh(); // Cập nhật trạng thái mở khóa
         levelSelectionView.show();
         primaryStage.setTitle("Arkanoid - Level Selection");
