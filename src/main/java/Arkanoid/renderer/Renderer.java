@@ -122,6 +122,10 @@ public class Renderer {
         gc.setFont(Font.font("Arial", 26));
         gc.fillText("Press L for Level Selection", Constants.WINDOW_WIDTH / 2.0, 300);
 
+    gc.setFill(Color.LIGHTGREEN);
+    gc.setFont(Font.font("Arial", 22));
+    gc.fillText("Press S for Settings", Constants.WINDOW_WIDTH / 2.0, 330);
+
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("Arial", 20));
         gc.fillText("Controls:", Constants.WINDOW_WIDTH / 2.0, 360);
