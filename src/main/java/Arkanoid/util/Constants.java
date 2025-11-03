@@ -26,7 +26,7 @@ public class Constants {
     public static final Color BALL_COLOR = Color.WHITE;
 
     // Bricks
-    public static final int BRICK_WIDTH = 75;
+    public static final int BRICK_WIDTH = 80;
     public static final int BRICK_HEIGHT = 20;
     public static final int BRICK_ROWS = 8;
     public static final int BRICK_COLS = 10;
