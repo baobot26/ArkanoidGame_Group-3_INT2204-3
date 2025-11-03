@@ -67,8 +67,6 @@
     {"row": 9, "col": 7, "type": "UNBREAKABLE", "color": "#bcbcbc"},
 
     {"row": 8, "col": 8, "type": "NORMAL", "color": "#0070ec"},
-    {"row": 9, "col": 8, "type": "UNBREAKABLE", "color": "#bcbcbc"},
-
-    {"row": 9, "col": 9, "type": "NORMAL", "color": "#fc7460"}
+    {"row": 9, "col": 8, "type": "NORMAL", "color": "#0070ec"}
   ]
 }
