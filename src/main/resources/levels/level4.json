@@ -1,0 +1,74 @@
+{
+  "levelNumber": 1,
+  "name": "Stairs",
+  "ballSpeed": 5.0,
+  "lives": 3,
+  "bricks": [
+    {"row": 0, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 1, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 2, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 3, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 4, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 5, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 6, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 7, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 8, "col": 0, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 9, "col": 0, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+
+    {"row": 1, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 2, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 3, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 4, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 5, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 6, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 7, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 8, "col": 1, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 9, "col": 1, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+
+    {"row": 2, "col": 2, "type": "NORMAL", "color": "#80d010"},
+    {"row": 3, "col": 2, "type": "NORMAL", "color": "#80d010"},
+    {"row": 4, "col": 2, "type": "NORMAL", "color": "#80d010"},
+    {"row": 5, "col": 2, "type": "NORMAL", "color": "#80d010"},
+    {"row": 6, "col": 2, "type": "NORMAL", "color": "#80d010"},
+    {"row": 7, "col": 2, "type": "NORMAL", "color": "#80d010"},
+    {"row": 8, "col": 2, "type": "NORMAL", "color": "#80d010"},
+    {"row": 9, "col": 2, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+    {"row": 3, "col": 3, "type": "NORMAL", "color": "#0070ec"},
+    {"row": 4, "col": 3, "type": "NORMAL", "color": "#0070ec"},
+    {"row": 5, "col": 3, "type": "NORMAL", "color": "#0070ec"},
+    {"row": 6, "col": 3, "type": "NORMAL", "color": "#0070ec"},
+    {"row": 7, "col": 3, "type": "NORMAL", "color": "#0070ec"},
+    {"row": 8, "col": 3, "type": "NORMAL", "color": "#0070ec"},
+    {"row": 9, "col": 3, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+    {"row": 4, "col": 4, "type": "NORMAL", "color": "#d82800"},
+    {"row": 5, "col": 4, "type": "NORMAL", "color": "#d82800"},
+    {"row": 6, "col": 4, "type": "NORMAL", "color": "#d82800"},
+    {"row": 7, "col": 4, "type": "NORMAL", "color": "#d82800"},
+    {"row": 8, "col": 4, "type": "NORMAL", "color": "#d82800"},
+    {"row": 9, "col": 4, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+    {"row": 5, "col": 5, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 6, "col": 5, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 7, "col": 5, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 8, "col": 5, "type": "NORMAL", "color": "#fc7460"},
+    {"row": 9, "col": 5, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+    {"row": 6, "col": 6, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 7, "col": 6, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 8, "col": 6, "type": "NORMAL", "color": "#3cbcfc"},
+    {"row": 9, "col": 6, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+    {"row": 7, "col": 7, "type": "NORMAL", "color": "#80d010"},
+    {"row": 8, "col": 7, "type": "NORMAL", "color": "#80d010"},
+    {"row": 9, "col": 7, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+    {"row": 8, "col": 8, "type": "NORMAL", "color": "#0070ec"},
+    {"row": 9, "col": 8, "type": "UNBREAKABLE", "color": "#bcbcbc"},
+
+    {"row": 9, "col": 9, "type": "NORMAL", "color": "#fc7460"}
+  ]
+}
